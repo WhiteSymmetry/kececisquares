@@ -1,14 +1,12 @@
 
-# Keçeci Fractals: Keçeci Fraktals
-
-Keçeci Circle Fractal: Keçeci-style circle fractal.
+# Keçeci Binomial Squares (Keçeci Binom Kareleri)
 
 [![PyPI version](https://badge.fury.io/py/kececisquares.svg)](https://badge.fury.io/py/kececisquares)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15392519.svg)](https://doi.org/10.5281/zenodo.15392519)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15392773.svg)](https://doi.org/10.5281/zenodo.15392773)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15396198.svg)](https://doi.org/10.5281/zenodo.15396198)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15392519.svg)](https://doi.org/10.5281/zenodo.)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15392773.svg)](https://doi.org/10.5281/zenodo.)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15396198.svg)](https://doi.org/10.5281/zenodo.)
 
 [![Anaconda-Server Badge](https://anaconda.org/bilgi/kececisquares/badges/version.svg)](https://anaconda.org/bilgi/kececisquares)
 [![Anaconda-Server Badge](https://anaconda.org/bilgi/kececisquares/badges/latest_release_date.svg)](https://anaconda.org/bilgi/kececisquares)
