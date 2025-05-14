@@ -4,7 +4,7 @@
 [![PyPI version](https://badge.fury.io/py/kececisquares.svg)](https://badge.fury.io/py/kececisquares)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15392519.svg)](https://doi.org/10.5281/zenodo.)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15411671.svg)](https://doi.org/10.5281/zenodo.15411671)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15392773.svg)](https://doi.org/10.5281/zenodo.)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15396198.svg)](https://doi.org/10.5281/zenodo.)
 
@@ -43,7 +43,7 @@ https://pypi.org/project/kececisquares/
 
 https://github.com/WhiteSymmetry/kececisquares
 
-https://zenodo.org/records/
+https://zenodo.org/records/15411671
 
 https://zenodo.org/records/
 
@@ -201,15 +201,15 @@ If this library was useful to you in your research, please cite us. Following th
 ### BibTeX
 
 ```bibtex
-@misc{kececi_2025_,
+@misc{kececi_2025_15411671,
   author       = {Keçeci, Mehmet},
   title        = {kececisquares},
   month        = may,
   year         = 2025,
   publisher    = {GitHub, PyPI, Anaconda, Zenodo},
   version      = {0.1.0},
-  doi          = {10.5281/zenodo.},
-  url          = {https://doi.org/10.5281/zenodo.},
+  doi          = {10.5281/zenodo.15411671},
+  url          = {https://doi.org/10.5281/zenodo.15411671},
 }
 
 @misc{kececi_2025_,
@@ -227,7 +227,7 @@ If this library was useful to you in your research, please cite us. Following th
 ### APA
 
 ```
-Keçeci, M. (2025). kececisquares (0.1.0). PyPI, Anaconda, GitHub, Zenodo. https://doi.org/10.5281/zenodo.
+Keçeci, M. (2025). kececisquares (0.1.0). GitHub, PyPI, Anaconda, Zenodo. https://doi.org/10.5281/zenodo.15411671
 
 
 
@@ -236,7 +236,7 @@ Keçeci, M. (2025). kececisquares (0.1.0). PyPI, Anaconda, GitHub, Zenodo. https
 
 ### Chicago
 ```
-Keçeci, Mehmet. "kececisquares". PyPI, Anaconda, GitHub, Zenodo, 01 May 2025. https://doi.org/10.5281/zenodo.
+Keçeci, Mehmet. "kececisquares". GitHub, PyPI, Anaconda, GitHub, Zenodo, 01 May 2025. https://doi.org/10.5281/zenodo.15411671
 
 
 
