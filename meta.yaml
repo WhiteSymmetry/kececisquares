@@ -1,0 +1,42 @@
+{% set version = "0.1.0" %}
+
+package:
+  name: kececisquares
+  version: {{ version }}
+
+source:
+  path: C:/Users/m/Documents/ipynb/kececisquares/
+
+build:
+  noarch: python  # Platformdan bağımsız bir paket oluşturur
+  script: "{{ PYTHON }} -m pip install . --no-deps --ignore-installed"
+  number: 0
+  entry_points:
+    - kececisquares = kececisquares.__main__:main
+
+requirements:
+  host:
+    - python {{ python }}
+    - numpy
+    # Other build tools
+  run:
+    - python >=3.9,<3.14
+    - numpy
+    # Other runtime dependencies
+  build:
+    - python >=3.9,<3.14
+    - pip
+
+test:
+  imports:
+    - kececisquares
+
+about:
+  home: https://github.com/WhiteSymmetry/kececisquares
+  license: MIT
+  summary: 'Keçeci Binomial Squares (Keçeci Binom Kareleri): The Keçeci Binomial Square is a series of binomial coefficients forming a square region within Khayyam (مثلث خیام), Pascal, Binomial Triangle, selected from a specified starting row with defined size and alignment.'
+  description: |
+    Keçeci Binomial Squares (Keçeci Binom Kareleri): The Keçeci Binomial Square is a series of binomial coefficients forming a square region within Khayyam (مثلث خیام), Pascal, Binomial Triangle, selected from a specified starting row with defined size and alignment.
+  dev_url: https://github.com/WhiteSymmetry/kececisquares
+  doc_url: https://github.com/WhiteSymmetry/kececisquares
+  doc_source_url: https://github.com/WhiteSymmetry/kececisquares/blob/main/README.md

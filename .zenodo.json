@@ -1,0 +1,13 @@
+{
+  "title": "kececisquares",
+  "upload_type": "software",
+  "description": "Keçeci Binomial Squares (Keçeci Binom Kareleri): The Keçeci Binomial Square is a series of binomial coefficients forming a square region within Khayyam (مثلث خیام), Pascal, Binomial Triangle, selected from a specified starting row with defined size and alignment.",
+  "creators": [
+    {
+      "name": "Keçeci, Mehmet",
+      "orcid": "0000-0001-9937-9839"
+    }
+  ],
+  "license": "mit-license",
+  "access_right": "open"
+}
