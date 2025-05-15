@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15411671.svg)](https://doi.org/10.5281/zenodo.15411671)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo..svg)](https://doi.org/10.5281/zenodo.)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15425855.svg)](https://doi.org/10.5281/zenodo.15425855)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo..svg)](https://doi.org/10.5281/zenodo.)
 
 [![Anaconda-Server Badge](https://anaconda.org/bilgi/kececisquares/badges/version.svg)](https://anaconda.org/bilgi/kececisquares)
@@ -212,15 +212,17 @@ If this library was useful to you in your research, please cite us. Following th
   url          = {https://doi.org/10.5281/zenodo.15411671},
 }
 
-@misc{kececi_2025_,
+@misc{kececi_2025_15425855,
   author       = {Keçeci, Mehmet},
-  title        = {
+  title        = {The Keçeci Binomial Square: A Reinterpretation of
+                   the Standard Binomial Expansion and Its Potential
+                   Applications
                   },
   month        = may,
   year         = 2025,
   publisher    = {Zenodo},
-  doi          = {10.5281/zenodo.},
-  url          = {https://doi.org/10.5281/zenodo.},
+  doi          = {10.5281/zenodo.15425855},
+  url          = {https://doi.org/10.5281/zenodo.15425855},
 }
 ```
 
@@ -229,8 +231,7 @@ If this library was useful to you in your research, please cite us. Following th
 ```
 Keçeci, M. (2025). kececisquares (0.1.0). GitHub, PyPI, Anaconda, Zenodo. https://doi.org/10.5281/zenodo.15411671
 
-
-
+Keçeci, M. (2025). The Keçeci Binomial Square: A Reinterpretation of the Standard Binomial Expansion and Its Potential Applications. https://doi.org/10.5281/zenodo.15425855
 
 ```
 
@@ -238,6 +239,6 @@ Keçeci, M. (2025). kececisquares (0.1.0). GitHub, PyPI, Anaconda, Zenodo. https
 ```
 Keçeci, Mehmet. "kececisquares". GitHub, PyPI, Anaconda, GitHub, Zenodo, 01 May 2025. https://doi.org/10.5281/zenodo.15411671
 
-
+Keçeci, Mehmet. "The Keçeci Binomial Square: A Reinterpretation of the Standard Binomial Expansion and Its Potential Applications", 15 Mayıs 2025. https://doi.org/10.5281/zenodo.15425855.
 
 ```
