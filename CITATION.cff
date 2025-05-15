@@ -18,7 +18,7 @@ identifiers:
   - type: doi
     value: 10.5281/zenodo.15411671
   - type: doi
-    value: 10.5281/zenodo.
+    value: 10.5281/zenodo.15425855
   - type: doi
     value: 10.5281/zenodo.
 repository-code: 'https://github.com/WhiteSymmetry/kececisquares'
