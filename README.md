@@ -6,13 +6,13 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15411671.svg)](https://doi.org/10.5281/zenodo.15411671)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15425855.svg)](https://doi.org/10.5281/zenodo.15425855)
-[![DOI](https://www.authorea.com/assets/official_logos/Authorea_2-2fa26349423e7aeee8c23876851a24a0e7871a31375d93f6ad0b25e6ab1816bc.svg)](https://doi.org/10.22541/au.175070836.63624913/v1)
-<svg xmlns="http://www.w3.org/2000/svg" width="130" height="20">
+[![DOI](<svg xmlns="http://www.w3.org/2000/svg" width="130" height="20">
   <rect rx="3" ry="3" width="130" height="20" fill="#000000"/>
   <rect rx="3" ry="3" x="55" width="75" height="20" fill="#ffffff"/>
   <text x="6" y="13" fill="#ffffff" font-size="11px" font-family="Arial,sans-serif">DOI</text>
-  <text x="60" y="13" fill="#000000" font-size="11px" font-family="Arial,sans-serif">10.22541/au.12345678</text>
-</svg>
+  <text x="60" y="13" fill="#000000" font-size="11px" font-family="Arial,sans-serif">/10.22541/au.175070836.63624913/v1</text>
+</svg>)](https://doi.org/10.22541/au.175070836.63624913/v1)
+
 
 [![Anaconda-Server Badge](https://anaconda.org/bilgi/kececisquares/badges/version.svg)](https://anaconda.org/bilgi/kececisquares)
 [![Anaconda-Server Badge](https://anaconda.org/bilgi/kececisquares/badges/latest_release_date.svg)](https://anaconda.org/bilgi/kececisquares)
