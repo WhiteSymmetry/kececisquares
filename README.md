@@ -6,7 +6,7 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15411671.svg)](https://doi.org/10.5281/zenodo.15411671)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15425855.svg)](https://doi.org/10.5281/zenodo.15425855)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo..svg)](https://doi.org/10.5281/zenodo.)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo..svg)](https://doi.org/10.22541/au.175070836.63624913/v1)
 
 [![Anaconda-Server Badge](https://anaconda.org/bilgi/kececisquares/badges/version.svg)](https://anaconda.org/bilgi/kececisquares)
 [![Anaconda-Server Badge](https://anaconda.org/bilgi/kececisquares/badges/latest_release_date.svg)](https://anaconda.org/bilgi/kececisquares)
@@ -171,19 +171,19 @@ else:
 
 
 ---
-![Keçeci Fractals Example](https://github.com/WhiteSymmetry/kececisquares/blob/main/examples/ks-1.png?raw=true)
+![Keçeci Squares Example](https://github.com/WhiteSymmetry/kececisquares/blob/main/examples/ks-1.png?raw=true)
 
-![Keçeci Fractals Example](https://github.com/WhiteSymmetry/kececisquares/blob/main/examples/ks-2.png?raw=true)
+![Keçeci Squares Example](https://github.com/WhiteSymmetry/kececisquares/blob/main/examples/ks-2.png?raw=true)
 
-![Keçeci Fractals Example](https://github.com/WhiteSymmetry/kececisquares/blob/main/examples/ks-3.png?raw=true)
+![Keçeci Squares Example](https://github.com/WhiteSymmetry/kececisquares/blob/main/examples/ks-3.png?raw=true)
 
-![Keçeci Fractals Example](https://github.com/WhiteSymmetry/kececisquares/blob/main/examples/kf-4.png?raw=true)
+![Keçeci Squares Example](https://github.com/WhiteSymmetry/kececisquares/blob/main/examples/kf-4.png?raw=true)
 
-![Keçeci Fractals Example](https://github.com/WhiteSymmetry/kececisquares/blob/main/examples/ks-5.png?raw=true)
+![Keçeci Squares Example](https://github.com/WhiteSymmetry/kececisquares/blob/main/examples/ks-5.png?raw=true)
 
-![Keçeci Fractals Example](https://github.com/WhiteSymmetry/kececisquares/blob/main/examples/ks-6.png?raw=true)
+![Keçeci Squares Example](https://github.com/WhiteSymmetry/kececisquares/blob/main/examples/ks-6.png?raw=true)
 
-![Keçeci Fractals Example](https://github.com/WhiteSymmetry/kececisquares/blob/main/examples/ks-7.png?raw=true)
+![Keçeci Squares Example](https://github.com/WhiteSymmetry/kececisquares/blob/main/examples/ks-7.png?raw=true)
 
 ---
 
@@ -229,6 +229,8 @@ If this library was useful to you in your research, please cite us. Following th
 ### APA
 
 ```
+Keçeci, M. (2025). Keçeci's Arithmetical Square. Authorea. June, 2025. https://doi.org/10.22541/au.175070836.63624913/v1
+
 Keçeci, M. (2025). kececisquares (0.1.0). GitHub, PyPI, Anaconda, Zenodo. https://doi.org/10.5281/zenodo.15411671
 
 Keçeci, M. (2025). The Keçeci Binomial Square: A Reinterpretation of the Standard Binomial Expansion and Its Potential Applications. https://doi.org/10.5281/zenodo.15425855
@@ -237,8 +239,10 @@ Keçeci, M. (2025). The Keçeci Binomial Square: A Reinterpretation of the Stand
 
 ### Chicago
 ```
+Keçeci, Mehmet. "Keçeci's Arithmetical Square". Authorea. June, 2025. https://doi.org/10.22541/au.175070836.63624913/v1
+
 Keçeci, Mehmet. "kececisquares". GitHub, PyPI, Anaconda, GitHub, Zenodo, 01 May 2025. https://doi.org/10.5281/zenodo.15411671
 
-Keçeci, Mehmet. "The Keçeci Binomial Square: A Reinterpretation of the Standard Binomial Expansion and Its Potential Applications", 15 Mayıs 2025. https://doi.org/10.5281/zenodo.15425855.
+Keçeci, Mehmet. "The Keçeci Binomial Square: A Reinterpretation of the Standard Binomial Expansion and Its Potential Applications", 15 Mayıs 2025. https://doi.org/10.5281/zenodo.15425855
 
 ```
