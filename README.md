@@ -6,7 +6,7 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15411671.svg)](https://doi.org/10.5281/zenodo.15411671)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15425855.svg)](https://doi.org/10.5281/zenodo.15425855)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo..svg)](https://doi.org/10.22541/au.175070836.63624913/v1)
+[![DOI](https://www.authorea.com/assets/official_logos/Authorea_2-2fa26349423e7aeee8c23876851a24a0e7871a31375d93f6ad0b25e6ab1816bc.svg)](https://doi.org/10.22541/au.175070836.63624913/v1)
 
 [![Anaconda-Server Badge](https://anaconda.org/bilgi/kececisquares/badges/version.svg)](https://anaconda.org/bilgi/kececisquares)
 [![Anaconda-Server Badge](https://anaconda.org/bilgi/kececisquares/badges/latest_release_date.svg)](https://anaconda.org/bilgi/kececisquares)
