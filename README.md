@@ -14,6 +14,7 @@
        height="25">
 </a>
 
+
 [![Anaconda-Server Badge](https://anaconda.org/bilgi/kececisquares/badges/version.svg)](https://anaconda.org/bilgi/kececisquares)
 [![Anaconda-Server Badge](https://anaconda.org/bilgi/kececisquares/badges/latest_release_date.svg)](https://anaconda.org/bilgi/kececisquares)
 [![Anaconda-Server Badge](https://anaconda.org/bilgi/kececisquares/badges/platforms.svg)](https://anaconda.org/bilgi/kececisquares)
