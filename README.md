@@ -6,13 +6,7 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15411671.svg)](https://doi.org/10.5281/zenodo.15411671)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15425855.svg)](https://doi.org/10.5281/zenodo.15425855)
-[![DOI](<svg xmlns="http://www.w3.org/2000/svg" width="130" height="20">
-  <rect rx="3" ry="3" width="130" height="20" fill="#000000"/>
-  <rect rx="3" ry="3" x="55" width="75" height="20" fill="#ffffff"/>
-  <text x="6" y="13" fill="#ffffff" font-size="11px" font-family="Arial,sans-serif">DOI</text>
-  <text x="60" y="13" fill="#000000" font-size="11px" font-family="Arial,sans-serif">/10.22541/au.175070836.63624913/v1</text>
-</svg>)](https://doi.org/10.22541/au.175070836.63624913/v1)
-
+![DOI](https%3A%2F%2Fdoi.org%2F10.22541%2Fau.175070836.63624913%2Fv1)
 
 [![Anaconda-Server Badge](https://anaconda.org/bilgi/kececisquares/badges/version.svg)](https://anaconda.org/bilgi/kececisquares)
 [![Anaconda-Server Badge](https://anaconda.org/bilgi/kececisquares/badges/latest_release_date.svg)](https://anaconda.org/bilgi/kececisquares)
