@@ -1,5 +1,5 @@
 
-# Keçeci Binomial Squares (Keçeci Binom Kareleri)
+# Keçeci Binomial Squares (Keçeci Binom Kareleri): Keçeci's Arithmetical Square (Keçeci Aritmetik Karesi, Keçeci'nin Aritmetik Karesi)
 
 [![PyPI version](https://badge.fury.io/py/kececisquares.svg)](https://badge.fury.io/py/kececisquares)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -22,7 +22,7 @@
 
 ## Description / Açıklama
 
-**Keçeci Binomial Squares (Keçeci Binom Kareleri)**: 
+**Keçeci Binomial Squares (Keçeci Binom Kareleri): Keçeci's Arithmetical Square (Keçeci Aritmetik Karesi, Keçeci'nin Aritmetik Karesi)**: 
 
 Keçeci Binomial Squares (Keçeci Binom Kareleri): The Keçeci Binomial Square is a series of binomial coefficients forming a square region within Khayyam (مثلث خیام), Pascal, Binomial Triangle, selected from a specified starting row with defined size and alignment.
 
