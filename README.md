@@ -7,7 +7,9 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15411670.svg)](https://doi.org/10.5281/zenodo.15411670)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15425855.svg)](https://doi.org/10.5281/zenodo.15425855)
 
-[![WorkflowHub DOI](https://img.shields.io/badge/DOI-10.22541/au.175070836.63624913/v1-blue)](https://doi.org/10.22541/au.175070836.63624913/v1)
+[![Authorea DOI](https://img.shields.io/badge/DOI-10.22541/au.175070836.63624913/v1-blue)](https://doi.org/10.22541/au.175070836.63624913/v1)
+
+[![WorkflowHub DOI](https://img.shields.io/badge/DOI-10.48546%2Fworkflowhub.datafile.15.1-blue)](https://doi.org/10.48546/workflowhub.datafile.15.1)
 
 [![Anaconda-Server Badge](https://anaconda.org/bilgi/kececisquares/badges/version.svg)](https://anaconda.org/bilgi/kececisquares)
 [![Anaconda-Server Badge](https://anaconda.org/bilgi/kececisquares/badges/latest_release_date.svg)](https://anaconda.org/bilgi/kececisquares)
@@ -230,6 +232,8 @@ If this library was useful to you in your research, please cite us. Following th
 ### APA
 
 ```
+Keçeci, M. (2025). kececisquares [Data set]. WorkflowHub. https://doi.org/10.48546/workflowhub.datafile.15.1
+
 Keçeci, M. (2025). Keçeci's Arithmetical Square. Authorea. June, 2025. https://doi.org/10.22541/au.175070836.63624913/v1
 
 Keçeci, M. (2025). kececisquares. Zenodo. https://doi.org/10.5281/zenodo.15411670
@@ -240,6 +244,8 @@ Keçeci, M. (2025). The Keçeci Binomial Square: A Reinterpretation of the Stand
 
 ### Chicago
 ```
+Keçeci, Mehmet. kececisquares [Data set]. WorkflowHub, 2025. https://doi.org/10.48546/workflowhub.datafile.15.1
+
 Keçeci, Mehmet. "Keçeci's Arithmetical Square". Authorea. June, 2025. https://doi.org/10.22541/au.175070836.63624913/v1
 
 Keçeci, Mehmet. "kececisquares". Zenodo, 01 May 2025. https://doi.org/10.5281/zenodo.15411670
