@@ -4,7 +4,7 @@
 [![PyPI version](https://badge.fury.io/py/kececisquares.svg)](https://badge.fury.io/py/kececisquares)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15411671.svg)](https://doi.org/10.5281/zenodo.15411671)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15411670.svg)](https://doi.org/10.5281/zenodo.15411670)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15425855.svg)](https://doi.org/10.5281/zenodo.15425855)
 
 
@@ -209,15 +209,15 @@ If this library was useful to you in your research, please cite us. Following th
 ### BibTeX
 
 ```bibtex
-@misc{kececi_2025_15411671,
+@misc{kececi_2025_15411670,
   author       = {Keçeci, Mehmet},
   title        = {kececisquares},
   month        = may,
   year         = 2025,
   publisher    = {GitHub, PyPI, Anaconda, Zenodo},
   version      = {0.1.0},
-  doi          = {10.5281/zenodo.15411671},
-  url          = {https://doi.org/10.5281/zenodo.15411671},
+  doi          = {10.5281/zenodo.15411670},
+  url          = {https://doi.org/10.5281/zenodo.15411670},
 }
 
 @misc{kececi_2025_15425855,
@@ -239,7 +239,7 @@ If this library was useful to you in your research, please cite us. Following th
 ```
 Keçeci, M. (2025). Keçeci's Arithmetical Square. Authorea. June, 2025. https://doi.org/10.22541/au.175070836.63624913/v1
 
-Keçeci, M. (2025). kececisquares (0.1.0). GitHub, PyPI, Anaconda, Zenodo. https://doi.org/10.5281/zenodo.15411671
+Keçeci, M. (2025). kececisquares. Zenodo. https://doi.org/10.5281/zenodo.15411670
 
 Keçeci, M. (2025). The Keçeci Binomial Square: A Reinterpretation of the Standard Binomial Expansion and Its Potential Applications. https://doi.org/10.5281/zenodo.15425855
 
@@ -249,7 +249,7 @@ Keçeci, M. (2025). The Keçeci Binomial Square: A Reinterpretation of the Stand
 ```
 Keçeci, Mehmet. "Keçeci's Arithmetical Square". Authorea. June, 2025. https://doi.org/10.22541/au.175070836.63624913/v1
 
-Keçeci, Mehmet. "kececisquares". GitHub, PyPI, Anaconda, GitHub, Zenodo, 01 May 2025. https://doi.org/10.5281/zenodo.15411671
+Keçeci, Mehmet. "kececisquares". Zenodo, 01 May 2025. https://doi.org/10.5281/zenodo.15411670
 
 Keçeci, Mehmet. "The Keçeci Binomial Square: A Reinterpretation of the Standard Binomial Expansion and Its Potential Applications", 15 Mayıs 2025. https://doi.org/10.5281/zenodo.15425855
 
