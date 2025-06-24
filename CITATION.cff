@@ -22,7 +22,7 @@ identifiers:
   - type: doi
     value: 10.22541/au.175070836.63624913/v1
   - type: doi
-    value: 
+    value: 10.48546/workflowhub.datafile.15.1
 repository-code: 'https://github.com/WhiteSymmetry/kececisquares'
 url: 'https://github.com/WhiteSymmetry/kececisquares'
 repository: 'https://anaconda.org/bilgi/kececisquares'
