@@ -16,11 +16,13 @@ authors:
     orcid: 'https://orcid.org/0000-0001-9937-9839'
 identifiers:
   - type: doi
-    value: 10.5281/zenodo.15411671
+    value: 10.5281/zenodo.15411670
   - type: doi
     value: 10.5281/zenodo.15425855
   - type: doi
-    value: 10.5281/zenodo.
+    value: 10.22541/au.175070836.63624913/v1
+  - type: doi
+    value: 
 repository-code: 'https://github.com/WhiteSymmetry/kececisquares'
 url: 'https://github.com/WhiteSymmetry/kececisquares'
 repository: 'https://anaconda.org/bilgi/kececisquares'
