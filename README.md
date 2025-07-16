@@ -22,7 +22,7 @@
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects//badge)](https://www.bestpractices.dev/projects/)
 
 [![Python CI](https://github.com/WhiteSymmetry/kececisquares/actions/workflows/python_ci.yml/badge.svg?branch=main)](https://github.com/WhiteSymmetry/kececisquares/actions/workflows/python_ci.yml)
-[![codecov](https://codecov.io/gh/WhiteSymmetry/kececisquares/graph/badge.svg?token=1SDH8E9RAJ)](https://codecov.io/gh/WhiteSymmetry/kececisquares)
+[![codecov](https://codecov.io/gh/WhiteSymmetry/kececisquares/graph/badge.svg?token=???)](https://codecov.io/gh/WhiteSymmetry/kececisquares)
 [![Documentation Status](https://readthedocs.org/projects/kececisquares/badge/?version=latest)](https://kececisquares.readthedocs.io/en/latest/)
 [![Binder](https://terrarium.evidencepub.io/badge_logo.svg)](https://terrarium.evidencepub.io/v2/gh/WhiteSymmetry/kececisquares/HEAD)
 [![PyPI version](https://badge.fury.io/py/kececisquares.svg)](https://badge.fury.io/py/kececisquares)
