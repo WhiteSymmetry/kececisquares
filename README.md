@@ -21,6 +21,14 @@
 
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects//badge)](https://www.bestpractices.dev/projects/)
 
+[![Python CI](https://github.com/WhiteSymmetry/kececisquares/actions/workflows/python_ci.yml/badge.svg?branch=main)](https://github.com/WhiteSymmetry/kececisquares/actions/workflows/python_ci.yml)
+[![codecov](https://codecov.io/gh/WhiteSymmetry/kececisquares/graph/badge.svg?token=1SDH8E9RAJ)](https://codecov.io/gh/WhiteSymmetry/kececisquares)
+[![Documentation Status](https://readthedocs.org/projects/kececisquares/badge/?version=latest)](https://kececisquares.readthedocs.io/en/latest/)
+[![Binder](https://terrarium.evidencepub.io/badge_logo.svg)](https://terrarium.evidencepub.io/v2/gh/WhiteSymmetry/kececisquares/HEAD)
+[![PyPI version](https://badge.fury.io/py/kececisquares.svg)](https://badge.fury.io/py/kececisquares)
+[![PyPI Downloads](https://static.pepy.tech/badge/kececisquares)](https://pepy.tech/projects/kececisquares)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md) 
+
 ---
 
 ## Description / Açıklama
