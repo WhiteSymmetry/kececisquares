@@ -115,17 +115,13 @@ def draw_kececi_binomial_square(
     if num_rows_to_draw <= 0: # Changed from == 0 to <= 0
         print("Number of rows to draw must be positive. Minimum is 1.")
         return None, None # Return None if plot cannot be made
-
     binomial_triangle = generate_binomial_triangle(num_rows_to_draw)
-    
     try:
         series, total_value, selected_indices_info = \
             kececi_binomial_square(binomial_triangle, square_region_size, start_row_index_for_square_0based, square_alignment)
     except ValueError as e:
         print(f"Error selecting square region: {e}")
         return None, None
-
-
     print(f"Keçeci Binomial Square Series ({square_alignment}): {series}")
     print(f"Keçeci Binomial Square Total Value: {total_value}")
     
@@ -214,10 +210,14 @@ def draw_kececi_binomial_square(
                                face_color=face_color_for_item, edge_color='black')
             
             text_font_size = 10
-            if num_rows_to_draw > 7: text_font_size = 8
-            if num_rows_to_draw > 12: text_font_size = 6
-            if num_rows_to_draw > 18: text_font_size = 5
-            if shape_to_draw == "triangle" and num_rows_to_draw > 10: text_font_size = max(4, text_font_size-1)
+            if num_rows_to_draw > 7: 
+                text_font_size = 8
+            if num_rows_to_draw > 12: 
+                text_font_size = 6
+            if num_rows_to_draw > 18: 
+                text_font_size = 5
+            if shape_to_draw == "triangle" and num_rows_to_draw > 10: 
+                text_font_size = max(4, text_font_size-1)
 
             plt.text(x_pos, y_pos, str(binomial_triangle[r_idx_triangle][c_idx_triangle]),
                      ha='center', va='center', fontsize=text_font_size, color='black')
