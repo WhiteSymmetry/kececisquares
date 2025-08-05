@@ -1,10 +1,12 @@
 # kececisquares.py
-import numpy as np
+
+import datetime
+import math # For math.ceil
 import matplotlib.pyplot as plt
 from matplotlib.patches import RegularPolygon, Rectangle, Circle, Polygon
-import datetime
+import numpy as np
 import platform
-import math # For math.ceil
+
 
 # Python version and date information (can be used by the main script if needed)
 PYTHON_VERSION_INFO = platform.python_version()
