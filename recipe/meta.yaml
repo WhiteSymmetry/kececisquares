@@ -1,11 +1,11 @@
-{% set version = "0.1.0" %}
+{% set version = "0.1.1" %}
 
 package:
   name: kececisquares
   version: {{ version }}
 
 source:
-  path: C:/Users/m/Documents/ipynb/kececisquares/
+  path: kececisquares/
 
 build:
   noarch: python  # Platformdan bağımsız bir paket oluşturur
