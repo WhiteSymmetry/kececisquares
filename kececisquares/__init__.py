@@ -4,8 +4,9 @@
 
 from __future__ import annotations
 import importlib
-import warnings
 import os
+import warnings
+
 # if os.getenv("DEVELOPMENT") == "true":
     # importlib.reload(kececisquares) # F821 undefined name 'kececisquares'
 
@@ -41,4 +42,4 @@ def eski_fonksiyon():
     )
 
 # Paket sürüm numarası
-__version__ = "0.1.0"
+__version__ = "0.1.1"
