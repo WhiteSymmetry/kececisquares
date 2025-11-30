@@ -7,6 +7,9 @@ import importlib
 import os
 import warnings
 
+# Paket sürüm numarası
+__version__ = "0.1.2"
+
 # if os.getenv("DEVELOPMENT") == "true":
     # importlib.reload(kececisquares) # F821 undefined name 'kececisquares'
 
@@ -40,6 +43,3 @@ def eski_fonksiyon():
         category=DeprecationWarning,
         stacklevel=2
     )
-
-# Paket sürüm numarası
-__version__ = "0.1.1"
