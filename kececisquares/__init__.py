@@ -8,7 +8,7 @@ import os
 import warnings
 
 # Paket sürüm numarası
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 
 # if os.getenv("DEVELOPMENT") == "true":
     # importlib.reload(kececisquares) # F821 undefined name 'kececisquares'
@@ -16,8 +16,16 @@ __version__ = "0.1.2"
 __all__ = [
     'generate_binomial_triangle',
     'kececi_binomial_square',
+    'kececi_binomial_triangle',
+    'kececi_binomial_diamond',
+    'kececi_binomial_diamond',
+    'kececi_binomial_trapezoid',
+    'kececi_binomial_zigzag',
+    'kececi_binomial_cross',
     'draw_shape_on_axis',
-    'draw_kececi_binomial_square'
+    'draw_kececi_binomial_region',
+    'calculate_hexagon_centers',
+    'get_user_parameters_for_region',
 ]
 
 # Göreli modül içe aktarmaları
