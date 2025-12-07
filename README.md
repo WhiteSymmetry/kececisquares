@@ -107,116 +107,155 @@ https://zenodo.org/records/
 ```python
 import matplotlib.pyplot as plt
 import kececisquares as ks
-import math # For math.ceil
+import math
 
-
-# Cell 2: Function to get user input (optional, you can hardcode for simplicity)
 def get_user_parameters():
-    """Gets parameters from the user."""
+    """Kullanıcıdan parametreleri alır."""
     print("--- Configure Binomial Triangle Visualization ---")
     try:
-        num_rows = int(input("Enter number of rows for Pascal's/Binomial Triangle (e.g., 7, min: 1): "))
+        # Bölge türü seçimi
+        region_prompt = (
+            "Region type (1: Square, 2: Triangle, 3: Diamond, 4: Staircase, "
+            "5: Trapezoid, 6: Zigzag, 7: Cross; default: 1-Square): "
+        )
+        region_choice = input(region_prompt).strip()
+        region_map = {
+            "1": ("square", "Square-Kare-Eşkenar Dikdörtgen"),
+            "2": ("triangle", "Triangle-Üçgen"),
+            "3": ("diamond", "Diamond-Elmas"),
+            "4": ("staircase", "Staircase-Merdiven"),
+            "5": ("trapezoid", "Isosceles Trapezoid-İkizkenar Trapezoid"),
+            "6": ("zigzag", "Zigzag-Zikzak"),
+            "7": ("cross", "Cross-Çapraz")
+        }
+        region_type, region_label = "square", "Square-Kare-Eşkenar Dikdörtgen"
+        if region_choice == "":
+            print("Defaulting to 'Square' (1).")
+        elif region_choice in region_map:
+            region_type, region_label = region_map[region_choice]
+            print(f"Selected region type: {region_label}")
+        else:
+            print("Invalid choice. Defaulting to 'Square' (1).")
+
+        # Satır sayısı
+        num_rows = int(input("Enter number of rows for Pascal's Triangle (e.g., 8, min: 1): "))
         if num_rows < 1:
             print("Error: Number of rows must be at least 1.")
             return None
 
-        practical_max_square_size = math.ceil(num_rows / 2) if num_rows > 1 else 1
-        square_size_prompt = (f"Enter square size (1-{num_rows}, e.g., 3, "
-                              f"practical max for centered: {practical_max_square_size}): ")
-        square_size = int(input(square_size_prompt))
-        if not (1 <= square_size <= num_rows):
-            print(f"Error: Square size must be between 1 and {num_rows}.")
+        # Bölge boyutu
+        if region_type in ["diamond", "cross"]:
+            max_size = (num_rows + 1) // 2
+            size_prompt = f"Enter {region_label} size (1-{max_size}, e.g., 3): "
+        else:
+            max_size = num_rows
+            size_prompt = f"Enter {region_label} size (1-{num_rows}, e.g., 3): "
+        region_size = int(input(size_prompt))
+        if not (1 <= region_size <= max_size):
+            print(f"Error: {region_label} size must be between 1 and {max_size}.")
             return None
 
-        min_start_row_0idx = max(0, square_size - 1)
-        max_start_row_0idx = num_rows - square_size
+        # Başlangıç satırı
+        if region_type in ["diamond", "cross"]:
+            total_height = 2 * region_size - 1
+            max_start_row_0idx = num_rows - total_height
+        else:
+            max_start_row_0idx = num_rows - region_size
+        min_start_row_0idx = 0
         if min_start_row_0idx > max_start_row_0idx:
-            print(f"A {square_size}x{square_size} square cannot be formed in a triangle of {num_rows} rows.")
+            print(f"A {region_label} of size {region_size} cannot fit in {num_rows} rows.")
             return None
-
-        start_row_prompt = (f"Enter starting row for the square "
-                            f"(1-indexed, between {min_start_row_0idx + 1} and {max_start_row_0idx + 1}, "
-                            f"e.g., {min_start_row_0idx + 1}): ")
+        start_row_prompt = f"Enter starting row (1-indexed, between {min_start_row_0idx+1} and {max_start_row_0idx+1}): "
         start_row_user = int(input(start_row_prompt))
         start_row_0idx = start_row_user - 1
         if not (min_start_row_0idx <= start_row_0idx <= max_start_row_0idx):
-            print(f"Error: Starting row (1-indexed) must be between {min_start_row_0idx + 1} and {max_start_row_0idx + 1}.")
+            print(f"Error: Starting row must be between {min_start_row_0idx+1} and {max_start_row_0idx+1}.")
             return None
 
+        # Hizalama
+        if region_type == "diamond":
+            alignment = "center"
+            print("♦ Diamond only supports CENTER alignment. Automatically set.")
+        else:
+            align_prompt = "Alignment (1: Left, 2: Right, 3: Centered; default: 1-Left): "
+            align_choice = input(align_prompt).strip()
+            align_map = {"1": "left", "2": "right", "3": "center"}
+            alignment = "left"
+            if align_choice == "":
+                print("Defaulting to 'Left-Aligned' (1).")
+            elif align_choice in align_map:
+                alignment = align_map[align_choice]
+            else:
+                print("Invalid alignment. Defaulting to 'Left-Aligned' (1).")
+
+        # Şekil türü
         shape_prompt = "Shape type (1: hexagon, 2: square, 3: circle, 4: triangle; default: 1-hexagon): "
         shape_choice = input(shape_prompt).strip()
         shape_map = {"1": "hexagon", "2": "square", "3": "circle", "4": "triangle"}
         shape_type = "hexagon"
-        if shape_choice == "": print("Defaulting to 'hexagon' (1).")
-        elif shape_choice in shape_map: shape_type = shape_map[shape_choice]
-        else: print(f"Invalid shape type. Defaulting to 'hexagon' (1).")
+        if shape_choice == "":
+            print("Defaulting to 'hexagon' (1).")
+        elif shape_choice in shape_map:
+            shape_type = shape_map[shape_choice]
+        else:
+            print("Invalid shape type. Defaulting to 'hexagon' (1).")
 
-        align_prompt = "Square alignment (1: Left, 2: Right, 3: Centered; default: 1-Left): "
-        align_choice = input(align_prompt).strip()
-        align_map = {"1": "left", "2": "right", "3": "center"}
-        alignment = "left"
-        if align_choice == "": print("Defaulting to 'Left-Aligned' (1).")
-        elif align_choice in align_map: alignment = align_map[align_choice]
-        else: print(f"Invalid alignment. Defaulting to 'Left-Aligned' (1).")
-
-        fill_prompt = "Fill the square? (1: Yes, 2: No; default: 1-Yes): "
+        # Dolgu
+        fill_prompt = "Fill the region? (1: Yes, 2: No; default: 1-Yes): "
         fill_choice = input(fill_prompt).strip()
         is_filled = True
-        if fill_choice == "1": pass
-        elif fill_choice == "2": is_filled = False
-        elif fill_choice == "": print("Defaulting to 'Yes' (1).")
-        else: print(f"Invalid fill choice. Defaulting to 'Yes' (1).")
+        if fill_choice == "2":
+            is_filled = False
+        elif fill_choice not in ["1", ""]:
+            print("Invalid choice. Defaulting to 'Yes' (1).")
 
+        # Sayıları göster
         show_val_prompt = "Show numbers inside shapes? (1: Yes, 2: No; default: 1-Yes): "
         show_val_choice = input(show_val_prompt).strip()
-        show_numbers = True # Varsayılan
-        if show_val_choice == "1": pass
-        elif show_val_choice == "2": show_numbers = False
-        elif show_val_choice == "": print("Defaulting to show numbers (1).")
-        else: print(f"Invalid choice for showing numbers. Defaulting to show numbers (1).")
-        
+        show_numbers = True
+        if show_val_choice == "2":
+            show_numbers = False
+        elif show_val_choice not in ["1", ""]:
+            print("Invalid choice. Defaulting to show numbers (1).")
+
         return {
             "num_rows": num_rows,
-            "square_size": square_size,
+            "region_size": region_size,
             "start_row_0idx": start_row_0idx,
+            "region_type": region_type,
             "shape_type": shape_type,
             "alignment": alignment,
             "is_filled": is_filled,
-            "show_numbers": show_numbers, # Yeni parametreyi sözlüğe ekle
+            "show_numbers": show_numbers,
         }
     except ValueError:
         print("Error: Invalid numerical input.")
         return None
     except Exception as e:
-        print(f"An unexpected error occurred during input: {e}")
+        print(f"An unexpected error occurred: {e}")
         return None
 
-# Cell 3: Get parameters and run the visualization
+# Kullanıcıdan parametreleri al ve görselleştirmeyi çalıştır
 params = get_user_parameters()
-
 if params:
-    print("\n--- Generating Plot ---")
-    # Call the drawing function from the module
-    # Pass show_plot=False if you want to manage plt.show() or save the figure later
-    # We let the module handle plt.show() by default for simplicity here.
-    fig, ax = ks.draw_kececi_binomial_square(
+    print(f"\n--- Generating {params['region_type'].upper()} Plot ---")
+    fig, ax = ks.draw_kececi_binomial_region(
         num_rows_to_draw=params["num_rows"],
-        square_region_size=params["square_size"],
-        start_row_index_for_square_0based=params["start_row_0idx"],
+        region_size=params["region_size"],
+        start_row_index_0based=params["start_row_0idx"],
+        region_type=params["region_type"],
         shape_to_draw=params["shape_type"],
-        square_alignment=params["alignment"],
-        is_square_filled=params["is_filled"],
-        show_plot=True, # Let the function call plt.show()
-        show_values=params.get("show_numbers", True) # Yeni parametre, varsayılan True
+        alignment=params["alignment"],
+        is_filled=params["is_filled"],
+        show_plot=True,
+        show_values=params["show_numbers"]
     )
-
     if fig:
         print("Plot generated successfully.")
-        # You can do more with fig and ax here if needed, e.g., fig.savefig("triangle.png")
     else:
         print("Plot generation failed.")
 else:
-    print("Could not proceed due to invalid parameters.")
+    print("Invalid parameters. Exiting.")
 ```
 ---
 
