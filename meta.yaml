@@ -5,7 +5,9 @@ package:
   version: {{ version }}
 
 source:
-  path: C:/Users/m/Documents/ipynb/kececisquares/
+  path: .
+  url:
+  sha256:
 
 build:
   noarch: python  # Platformdan bağımsız bir paket oluşturur
