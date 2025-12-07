@@ -1,4 +1,10 @@
-# kececisquares.py
+# -*- coding: utf-8 -*-
+# ruff: noqa: N806, N815
+
+"""
+kececisquares.py
+Keçeci Binomial Squares (Keçeci Binom Kareleri): The Keçeci Binomial Square is a series of binomial coefficients forming a square region within Khayyam (مثلث خیام), Pascal, Binomial Triangle, selected from a specified starting row with defined size and alignment.
+"""
 
 import datetime
 import math
