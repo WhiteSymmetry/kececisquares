@@ -8,7 +8,7 @@ import os
 import warnings
 
 # Paket sürüm numarası
-__version__ = "0.1.3"
+__version__ = "0.1.4"
 
 # if os.getenv("DEVELOPMENT") == "true":
     # importlib.reload(kececisquares) # F821 undefined name 'kececisquares'
@@ -27,6 +27,22 @@ __all__ = [
     'calculate_hexagon_centers',
     'get_user_parameters_for_region',
 ]
+
+# Fonksiyonları içe aktar
+from .kececisquares import (
+    generate_binomial_triangle,
+    kececi_binomial_square,
+    kececi_binomial_triangle,
+    kececi_binomial_diamond,
+    kececi_binomial_staircase,
+    kececi_binomial_trapezoid,
+    kececi_binomial_zigzag,
+    kececi_binomial_cross,
+    draw_shape_on_axis,
+    draw_kececi_binomial_region,
+    calculate_hexagon_centers,
+    get_user_parameters_for_region,
+)
 
 # Göreli modül içe aktarmaları
 # F401 hatasını önlemek için sadece kullanacağınız şeyleri dışa aktarın
