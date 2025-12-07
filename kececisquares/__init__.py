@@ -8,7 +8,7 @@ import os
 import warnings
 
 # Paket sürüm numarası
-__version__ = "0.1.5"
+__version__ = "0.1.6"
 
 # =============================================================================
 # OTOMATİK İÇE AKTARMA VE __all__ OLUŞTURMA
@@ -31,7 +31,6 @@ from .kececisquares import (  # Veya fonksiyonların bulunduğu asıl modül
     kececi_binomial_cross,
     draw_shape_on_axis,
     draw_kececi_binomial_region,
-    calculate_hexagon_centers,
     get_user_parameters_for_region,
 )
 
@@ -46,7 +45,6 @@ __all__ = [
     'kececi_binomial_cross',
     'draw_shape_on_axis',
     'draw_kececi_binomial_region',
-    'calculate_hexagon_centers',
     'get_user_parameters_for_region'
 ]
 
