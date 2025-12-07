@@ -4,10 +4,17 @@ author = 'Mehmet Keçeci'
 copyright = '2025, Mehmet Keçeci'
 
 # Version Management
-# from setuptools_scm import get_version
-# version = get_version(root='..', relative_to=__file__)
-version = '0.1.1'  # Replace with your actual version number
-release = version
+# Sürüm Bilgisi (setuptools_scm kullanmıyorsanız sabit olarak tanımlayın)
+# Gerçek sürümü modülden al (eğer mümkünse)
+try:
+    from kececisquares import __version__
+    version = __version__
+    release = __version__
+except (ImportError, AttributeError) as e:
+    print(f"Warning: Could not import __version__ from kececilayout: {e}")
+    # Varsayılan değerler korunur
+# version = '0.1.3'  # Geliştirme sürümü
+# release = '0.1.3'  # Yayın sürümü
 
 # General Configuration
 master_doc = 'index'
