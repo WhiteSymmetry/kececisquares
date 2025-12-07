@@ -1,6 +1,6 @@
 # _version.py
 
-__version__ = "0.1.5"
+__version__ = "0.1.6"
 __license__ = "MIT"
 __description__ = "Keçeci Binomial Squares (Keçeci Binom Kareleri): The Keçeci Binomial Square is a series of binomial coefficients forming a square region within Khayyam (مثلث خیام), Pascal, Binomial Triangle, selected from a specified starting row with defined size and alignment."
 __author__ = "Mehmet Keçeci"
