@@ -8,28 +8,19 @@ import os
 import warnings
 
 # Paket sürüm numarası
-__version__ = "0.1.4"
+__version__ = "0.1.5"
 
-# if os.getenv("DEVELOPMENT") == "true":
-    # importlib.reload(kececisquares) # F821 undefined name 'kececisquares'
+# =============================================================================
+# OTOMATİK İÇE AKTARMA VE __all__ OLUŞTURMA
+# Bu bölüm, yeni fonksiyon eklediğinizde elle güncelleme yapma
+# ihtiyacını ortadan kaldırır.
+# =============================================================================
 
-__all__ = [
-    'generate_binomial_triangle',
-    'kececi_binomial_square',
-    'kececi_binomial_triangle',
-    'kececi_binomial_diamond',
-    'kececi_binomial_diamond',
-    'kececi_binomial_trapezoid',
-    'kececi_binomial_zigzag',
-    'kececi_binomial_cross',
-    'draw_shape_on_axis',
-    'draw_kececi_binomial_region',
-    'calculate_hexagon_centers',
-    'get_user_parameters_for_region',
-]
+# Ana modülümüzü içe aktarıyoruz
+# from . import kececisquares
 
 # Fonksiyonları içe aktar
-from .kececisquares import (
+from .kececisquares import (  # Veya fonksiyonların bulunduğu asıl modül
     generate_binomial_triangle,
     kececi_binomial_square,
     kececi_binomial_triangle,
@@ -43,6 +34,21 @@ from .kececisquares import (
     calculate_hexagon_centers,
     get_user_parameters_for_region,
 )
+
+__all__ = [
+    'generate_binomial_triangle',
+    'kececi_binomial_square',
+    'kececi_binomial_triangle',
+    'kececi_binomial_diamond',
+    'kececi_binomial_diamond',
+    'kececi_binomial_trapezoid',
+    'kececi_binomial_zigzag',
+    'kececi_binomial_cross',
+    'draw_shape_on_axis',
+    'draw_kececi_binomial_region',
+    'calculate_hexagon_centers',
+    'get_user_parameters_for_region'
+]
 
 # Göreli modül içe aktarmaları
 # F401 hatasını önlemek için sadece kullanacağınız şeyleri dışa aktarın
