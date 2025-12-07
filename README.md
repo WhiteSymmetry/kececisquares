@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15411670.svg)](https://doi.org/10.5281/zenodo.15411670)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15425855.svg)](https://doi.org/10.5281/zenodo.15425855)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15425529.svg)](https://doi.org/10.5281/zenodo.15425529)
 
 [![Authorea DOI](https://img.shields.io/badge/DOI-10.22541/au.175070836.63624913/v1-blue)](https://doi.org/10.22541/au.175070836.63624913/v1)
 
@@ -325,7 +325,7 @@ Keçeci, M. (2025). Keçeci's Arithmetical Square. Authorea. June, 2025. https:/
 
 Keçeci, M. (2025). kececisquares. Zenodo. https://doi.org/10.5281/zenodo.15411670
 
-Keçeci, M. (2025). The Keçeci Binomial Square: A Reinterpretation of the Standard Binomial Expansion and Its Potential Applications. https://doi.org/10.5281/zenodo.15425855
+Keçeci, M. (2025). The Keçeci Binomial Square: A Reinterpretation of the Standard Binomial Expansion and Its Potential Applications. https://doi.org/10.5281/zenodo.15425529
 
 ```
 
@@ -337,6 +337,6 @@ Keçeci, Mehmet. "Keçeci's Arithmetical Square". Authorea. June, 2025. https://
 
 Keçeci, Mehmet. "kececisquares". Zenodo, 01 May 2025. https://doi.org/10.5281/zenodo.15411670
 
-Keçeci, Mehmet. "The Keçeci Binomial Square: A Reinterpretation of the Standard Binomial Expansion and Its Potential Applications", 15 Mayıs 2025. https://doi.org/10.5281/zenodo.15425855
+Keçeci, Mehmet. "The Keçeci Binomial Square: A Reinterpretation of the Standard Binomial Expansion and Its Potential Applications", 15 Mayıs 2025. https://doi.org/10.5281/zenodo.15425529
 
 ```
