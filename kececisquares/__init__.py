@@ -8,7 +8,7 @@ import os
 import warnings
 
 # Paket sürüm numarası
-__version__ = "0.1.6"
+__version__ = "0.1.7"
 
 # =============================================================================
 # OTOMATİK İÇE AKTARMA VE __all__ OLUŞTURMA
