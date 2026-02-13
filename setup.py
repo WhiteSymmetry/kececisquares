@@ -43,6 +43,6 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.10',
-    license="MIT",
+    python_requires='>=3.11',
+    license="AGPL-3.0-or-later",
 )
