@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # __init__.py
 # Bu dosya paketin başlangıç noktası olarak çalışır.
 # Alt modülleri yükler, sürüm bilgileri tanımlar ve geriye dönük uyumluluk için uyarılar sağlar.
