@@ -1,6 +1,6 @@
 {
   "name": "kececisquares",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Keçeci Binomial Squares (Keçeci Binom Kareleri): The Keçeci Binomial Square is a series of binomial coefficients forming a square region within Khayyam (مثلث خیام), Pascal, Binomial Triangle, selected from a specified starting row with defined size and alignment.",
   "main": "index.js",
   "scripts": {
@@ -25,7 +25,7 @@
     "Binom"
   ],
   "author": "Mehmet Keçeci",
-  "license": "MIT",
+  "license": "AGPL3.0-or-later",
   "bugs": {
     "url": "https://github.com/WhiteSymmetry/kececisquares/issues"
   },
