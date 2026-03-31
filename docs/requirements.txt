@@ -4,4 +4,5 @@ urllib3>=2.6.3
 sphinx_copybutton
 sphinx-autobuild
 myst_parser
+Pygments>=2.20.0
 requests>=2.33.0
