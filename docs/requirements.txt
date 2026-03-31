@@ -4,3 +4,4 @@ urllib3>=2.6.3
 sphinx_copybutton
 sphinx-autobuild
 myst_parser
+requests>=2.33.0
