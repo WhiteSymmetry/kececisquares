@@ -6,4 +6,4 @@ __description__ = "Keçeci Binomial Squares (Keçeci Binom Kareleri): The Keçec
 __author__ = "Mehmet Keçeci"
 __url__ = "https://github.com/WhiteSymmetry/kececisquares"
 __docs__ = "https://github.com/WhiteSymmetry/kececisquares"  # Opsiyonel: Dokümantasyon linki
-__dependencies__ = ["python>=3.10"]  # Diğer bağımlılıkları da ekleyebilirsiniz
+__dependencies__ = ["python>=3.11"]  # Diğer bağımlılıkları da ekleyebilirsiniz
