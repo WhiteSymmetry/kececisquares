@@ -4,7 +4,7 @@
 ## Keçeci Binomial Squares (Keçeci Binom Kareleri) <img src="https://github.com/WhiteSymmetry/kececisquares/blob/main/docs/logo.jpg" alt="Keçeci Binomial Squares (Keçeci Binom Kareleri)" align="right" height="140"/>
 
 [![PyPI version](https://badge.fury.io/py/kececisquares.svg)](https://badge.fury.io/py/kececisquares)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: AGPL-3.0 license](https://img.shields.io/badge/License-AGPL-yellow.svg)](https://opensource.org/license/agpl-3-0)
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15411670.svg)](https://doi.org/10.5281/zenodo.15411670)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15425529.svg)](https://doi.org/10.5281/zenodo.15425529)
@@ -61,10 +61,10 @@
             </td>
         </tr>
         <tr>
-            <td style="text-align: center;">License: MIT</td>
+            <td style="text-align: center;">License: AGPL-3.0 license</td>
             <td style="text-align: center;">
-                <a href="https://opensource.org/licenses/MIT">
-                    <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License" height="18"/>
+                <a href="https://opensource.org/license/agpl-3-0">
+                    <img src="https://img.shields.io/badge/License-AGPL-yellow.svg" alt="License" height="18"/>
                 </a>
             </td>
         </tr>
@@ -284,7 +284,7 @@ else:
 
 ## License / Lisans
 
-This project is licensed under the MIT License. See the `LICENSE` file for details.
+This project is licensed under the AGPL3.0-or-later License. See the `LICENSE` file for details.
 
 ## Citation
 
