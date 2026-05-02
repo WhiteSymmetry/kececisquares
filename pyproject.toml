@@ -6,13 +6,17 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "kececisquares"
-version = "0.1.6"
+version = "0.1.7"
 
 # Diğer proje bilgileri (isteğe bağlı ama tavsiye edilir)
 authors = [
     { name="Mehmet Keçeci", email="mkececi@yaani.com" },
 ]
-description = "Keçeci Binomial Squares (Keçeci Binom Kareleri): The Keçeci Binomial Square is a series of binomial coefficients forming a square region within Khayyam (مثلث خیام), Pascal, Binomial Triangle, selected from a specified starting row with defined size and alignment."
+description = "Keçeci Binomial Squares (Keçeci Binom Kareleri): 
+The Keçeci Binomial Square is a series of binomial coefficients 
+forming a square or other geometric shapes region within 
+Khayyam (مثلث خیام), Pascal, Binomial Triangle, selected from 
+a specified starting row with defined size and alignment."
 readme = "README.md"
 requires-python = ">=3.11"
 license = { file="LICENSE" }
