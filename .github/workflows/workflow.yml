@@ -1,13 +1,13 @@
 name: Publish Python Package to PyPI-Resmi
 
-runs:
-  using: 'node24'
-  main: 'main.js'
-
 on:
   push:
     branches: ["main"]
   workflow_dispatch:
+
+runs:
+  using: 'node24'
+  main: 'main.js'
 
 jobs:
   publish:
