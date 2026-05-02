@@ -342,3 +342,68 @@ Keçeci, Mehmet. "kececisquares". Zenodo, 01 May 2025. https://doi.org/10.5281/z
 Keçeci, Mehmet. "The Keçeci Binomial Square: A Reinterpretation of the Standard Binomial Expansion and Its Potential Applications", 15 Mayıs 2025. https://doi.org/10.5281/zenodo.15425529
 
 ```
+
+---
+
+# Pixi:
+
+[![Pixi](https://img.shields.io/badge/Pixi-Pixi-brightgreen.svg)](https://prefix.dev/channels/bilgi)
+
+pixi init kececisquares
+
+cd kececisquares
+
+pixi workspace channel add [https://prefix.dev/channels/bilgi](https://prefix.dev/channels/bilgi) --prepend
+
+✔ Added https://prefix.dev/channels/bilgi
+
+pixi add kececisquares
+
+✔ Added kececisquares >=...,<1
+
+pixi install
+
+pixi shell
+
+pixi run python -c "import kececisquares; print(kececisquares.__version__)"
+
+### Çıktı: 
+
+pixi remove kececisquares
+
+conda install -c https://prefix.dev/channels/bilgi kececisquares
+
+pixi run python -c "import kececisquares; print(kececisquares.__version__)"
+
+### Çıktı: 
+
+pixi run pip list | grep kececisquares
+
+### kececisquares  
+
+pixi run pip show kececisquares
+
+Name: kececisquares
+
+Version: 
+
+Summary: Keçeci Squares
+
+Home-page: https://github.com/WhiteSymmetry/kececisquares
+
+Author: Mehmet Keçeci
+
+Author-email: Mehmet Keçeci <...>
+
+License: GNU AFFERO GENERAL PUBLIC LICENSE
+
+Copyright (c) 2025-2026 Mehmet Keçeci
+
+----
+
+1. https://pypi.org/project/kececisquares/
+2. https://anaconda.org/bilgi/kececisquares
+3. https://prefix.dev/channels/bilgi/packages/kececisquares
+
+---
+
