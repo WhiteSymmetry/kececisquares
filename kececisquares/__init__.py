@@ -33,7 +33,6 @@ from .kececisquares import (  # Veya fonksiyonların bulunduğu asıl modül
     draw_shape_on_axis,
     draw_kececi_binomial_region,
     get_user_parameters_for_region,
-    draw_kececi_binomial_square,
 )
 
 __all__ = [
@@ -48,7 +47,6 @@ __all__ = [
     'draw_shape_on_axis',
     'draw_kececi_binomial_region',
     'get_user_parameters_for_region',
-    'draw_kececi_binomial_square',
 ]
 
 # Göreli modül içe aktarmaları
@@ -57,7 +55,7 @@ __all__ = [
 try:
     #from .kececisquares import *  # gerekirse burada belirli fonksiyonları seçmeli yapmak daha güvenlidir
     #from . import kececisquares  # Modülün kendisine doğrudan erişim isteniyorsa
-    from .kececisquares import generate_binomial_triangle, kececi_binomial_square, draw_shape_on_axis, draw_kececi_binomial_square
+    from .kececisquares import generate_binomial_triangle, kececi_binomial_square, draw_shape_on_axis,
 except ImportError as e:
     warnings.warn(f"Gerekli modül yüklenemedi: {e}", ImportWarning)
 
