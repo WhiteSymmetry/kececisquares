@@ -33,6 +33,7 @@ from .kececisquares import (  # Veya fonksiyonların bulunduğu asıl modül
     draw_shape_on_axis,
     draw_kececi_binomial_region,
     get_user_parameters_for_region,
+    draw_kececi_binomial_square,
 )
 
 __all__ = [
@@ -46,7 +47,8 @@ __all__ = [
     'kececi_binomial_cross',
     'draw_shape_on_axis',
     'draw_kececi_binomial_region',
-    'get_user_parameters_for_region'
+    'get_user_parameters_for_region',
+    'draw_kececi_binomial_square',
 ]
 
 # Göreli modül içe aktarmaları
