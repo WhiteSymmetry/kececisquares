@@ -1,6 +1,10 @@
 
 # Keçeci Binomial Squares (Keçeci Binom Kareleri): Keçeci's Arithmetical Square (Keçeci Aritmetik Karesi, Keçeci'nin Aritmetik Karesi)
 
+**Keçeci Binomial Shapes: Keçeci Binomial Şekilleri**
+
+**Keçeci-Narayana Shapes: Keçeci-Narayana Şekilleri**
+
 ## Keçeci Binomial Squares (Keçeci Binom Kareleri) <img src="https://github.com/WhiteSymmetry/kececisquares/blob/main/docs/logo.jpg" alt="Keçeci Binomial Squares (Keçeci Binom Kareleri)" align="right" height="140"/>
 
 [![PyPI version](https://badge.fury.io/py/kececisquares.svg)](https://badge.fury.io/py/kececisquares)
@@ -77,9 +81,13 @@
 
 **Keçeci Binomial Squares (Keçeci Binom Kareleri): Keçeci's Arithmetical Square (Keçeci Aritmetik Karesi, Keçeci'nin Aritmetik Karesi)**: 
 
+**Keçeci Binomial Shapes: Keçeci Binomial Şekilleri**
+
 Keçeci Binomial Squares (Keçeci Binom Kareleri): The Keçeci Binomial Square is a series of binomial coefficients forming a square or other geometric shapes region within Khayyam (مثلث خیام), Pascal, Binomial Triangle, selected from a specified starting row with defined size and alignment.
 
 Keçeci Binom Karesi, Hayyam (مثلث خیام), Pascal, Binomial üçgeni içinde belirli bir başlangıç satırından itibaren, seçili boyut ve hizalamada bir kare veya diğer geometrik şekiller oluşturan binom katsayıları serisidir.
+
+0.1.8: Keçeci-Narayana Shapes: Keçeci-Narayana Şekilleri
 
 ---
 
