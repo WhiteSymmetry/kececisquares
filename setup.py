@@ -23,7 +23,7 @@ from setuptools import setup, find_packages
 setup(
     name="kececisquares",
     version=get_version(),
-    description="Keçeci Binomial Squares (Keçeci Binom Kareleri): The Keçeci Binomial Square is a series of binomial coefficients forming a square region within Khayyam (مثلث خیام), Pascal, Binomial Triangle, selected from a specified starting row with defined size and alignment.",
+    description="Keçeci Binomial Squares (Keçeci Binom Kareleri), Keçeci-Narayana Shapes: The Keçeci Binomial Square is a series of binomial coefficients forming a square region within Khayyam (مثلث خیام), Pascal, Binomial Triangle, selected from a specified starting row with defined size and alignment.",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     author="Mehmet Keçeci",
