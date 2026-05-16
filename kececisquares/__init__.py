@@ -1,28 +1,27 @@
+### `__init__.py`
 # -*- coding: utf-8 -*-
-# __init__.py
-# Bu dosya paketin başlangıç noktası olarak çalışır.
-# Alt modülleri yükler, sürüm bilgileri tanımlar ve geriye dönük uyumluluk için uyarılar sağlar.
+"""
+Keçeci Binomial & Keçeci-Narayana Visualizer Package
 
+Provides a unified toolkit for:
+- Generating Pascal/Khayyam and Narayana triangles
+- Selecting geometric regions (square, triangle, diamond, staircase, etc.)
+- Visualizing regions on a hexagonal grid
+- Exporting statistical reports (CSV, JSON)
+- Interactive CLI parameter collection
+
+"""
 from __future__ import annotations
-import importlib
-import os
-import warnings
 
-# Paket sürüm numarası
 __version__ = "0.1.8"
 
-# =============================================================================
-# OTOMATİK İÇE AKTARMA VE __all__ OLUŞTURMA
-# Bu bölüm, yeni fonksiyon eklediğinizde elle güncelleme yapma
-# ihtiyacını ortadan kaldırır.
-# =============================================================================
 
-# Ana modülümüzü içe aktarıyoruz
-# from . import kececisquares
-
-# Fonksiyonları içe aktar
-from .kececisquares import (  # Veya fonksiyonların bulunduğu asıl modül
+from .kececisquares import (
+    # Triangle generators
     generate_binomial_triangle,
+    generate_narayana_triangle,
+    
+    # Region selectors (Binomial)
     kececi_binomial_square,
     kececi_binomial_triangle,
     kececi_binomial_diamond,
@@ -30,45 +29,52 @@ from .kececisquares import (  # Veya fonksiyonların bulunduğu asıl modül
     kececi_binomial_trapezoid,
     kececi_binomial_zigzag,
     kececi_binomial_cross,
+    kececi_nested_square,
+    
+    # Region selector (Narayana)
+    kececi_narayana_shape,
+    
+    # Visualization
+    draw_kececi_region,
     draw_shape_on_axis,
-    draw_kececi_binomial_region,
-    get_user_parameters_for_region,
+    
+    # Statistics & Reporting
+    calculate_region_statistics,
+    detect_patterns,
+    print_triangle_matrix,        
+    print_detailed_report,
+    print_console_reports,       
+    
+    # Export
+    export_to_csv,
+    export_to_json,
+    
+    # High-level API
+    generate_full_report,         # Public
+    get_user_parameters,
 )
 
 __all__ = [
-    'generate_binomial_triangle',
-    'kececi_binomial_square',
-    'kececi_binomial_triangle',
-    'kececi_binomial_diamond',
-    'kececi_binomial_diamond',
-    'kececi_binomial_trapezoid',
-    'kececi_binomial_zigzag',
-    'kececi_binomial_cross',
-    'draw_shape_on_axis',
-    'draw_kececi_binomial_region',
-    'get_user_parameters_for_region',
+    "generate_binomial_triangle",
+    "generate_narayana_triangle",
+    "kececi_binomial_square",
+    "kececi_binomial_triangle", 
+    "kececi_binomial_diamond",
+    "kececi_binomial_staircase",
+    "kececi_binomial_trapezoid",
+    "kececi_binomial_zigzag",
+    "kececi_binomial_cross",
+    "kececi_nested_square",
+    "kececi_narayana_shape",
+    "draw_kececi_region",
+    "draw_shape_on_axis",
+    "calculate_region_statistics",
+    "detect_patterns",
+    "print_triangle_matrix",
+    "print_detailed_report",
+    "print_console_reports",
+    "export_to_csv",
+    "export_to_json",
+    "generate_full_report",
+    "get_user_parameters",
 ]
-
-# Göreli modül içe aktarmaları
-# F401 hatasını önlemek için sadece kullanacağınız şeyleri dışa aktarın
-# Aksi halde linter'lar "imported but unused" uyarısı verir
-try:
-    #from .kececisquares import *  # gerekirse burada belirli fonksiyonları seçmeli yapmak daha güvenlidir
-    #from . import kececisquares  # Modülün kendisine doğrudan erişim isteniyorsa
-    from .kececisquares import generate_binomial_triangle, kececi_binomial_square, draw_shape_on_axis
-except ImportError as e:
-    warnings.warn(f"Gerekli modül yüklenemedi: {e}", ImportWarning)
-
-# Eski bir fonksiyonun yer tutucusu - gelecekte kaldırılacak
-def eski_fonksiyon():
-    """
-    Kaldırılması planlanan eski bir fonksiyondur.
-    Lütfen alternatif fonksiyonları kullanın.
-    """
-    warnings.warn(
-        "eski_fonksiyon() artık kullanılmamaktadır ve gelecekte kaldırılacaktır. "
-        "Lütfen yeni alternatif fonksiyonları kullanın. "
-        "Keçeci Fractals; Python 3.11-3.14 sürümlerinde sorunsuz çalışmalıdır.",
-        category=DeprecationWarning,
-        stacklevel=2
-    )
