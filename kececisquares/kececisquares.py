@@ -3,854 +3,905 @@
 
 """
 kececisquares.py
-Keçeci Binomial Squares (Keçeci Binom Kareleri): 
+Keçeci Binomial Squares (Keçeci Binom Kareleri)
+Keçeci-Narayana Shapes (Keçeci-Narayana Şekilleri)
+
 The Keçeci Binomial Square is a series of binomial coefficients 
-forming a square or other geometric shapes region within Khayyam (مثلث خیام), Pascal, Binomial Triangle, 
-selected from a specified starting row with defined size and alignment.
+forming a square or other geometric shapes region within Khayyam (مثلث خیام), 
+Pascal, Binomial Triangle, selected from a specified starting row with defined 
+size and alignment.
+
+Narayana üçgeni içinde belirli alt alanların seçilmesiyle elde edilen 
+geometrik bölgeler Keçeci-Narayana Şekilleri (Keçeci-Narayana Shapes) 
+olarak adlandırılmıştır.
+
+Keçeci Binomial & Keçeci-Narayana Visualizer
+
+Provides tools for generating Pascal/Khayyam and Narayana triangles,
+selecting geometric regions, visualizing on hexagonal grids, and
+exporting statistical reports.
 """
 
+from __future__ import annotations
+
 import datetime
-import math
-import matplotlib.pyplot as plt
-from matplotlib.patches import RegularPolygon, Rectangle, Circle, Polygon
-import numpy as np
+import json
+import csv
 import platform
+import warnings
+from collections import Counter
+from math import comb
+from statistics import mean, median, stdev, variance
+from typing import List, Dict, Optional, Tuple, Any
 
-# Sürüm ve tarih bilgisi
-PYTHON_VERSION_INFO = platform.python_version()
-CURRENT_DATE_INFO = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.patches import Circle, Polygon, Rectangle, RegularPolygon
 
-# ========================================================
-# 1. Temel Üçgen Üretici
-# ========================================================
-def generate_binomial_triangle(num_rows):
+# =============================================================================
+# METADATA
+# =============================================================================
+PYTHON_VERSION = platform.python_version()
+TIMESTAMP = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+
+# =============================================================================
+# 1. TRIANGLE GENERATORS
+# =============================================================================
+def generate_binomial_triangle(num_rows: int) -> List[List[int]]:
+    """
+    Generate Pascal/Khayyam triangle up to `num_rows`.
+    Pascal/Binom üçgeni oluşturur.
+    """
     if num_rows < 1:
         raise ValueError("Number of rows must be at least 1.")
     triangle = []
-    for row_index in range(num_rows):
+    for r in range(num_rows):
         row = [1]
-        if row_index > 0:
-            prev_row = triangle[row_index - 1]
-            for j in range(1, row_index):
-                row.append(prev_row[j - 1] + prev_row[j])
+        if r > 0:
+            prev = triangle[-1]
+            row.extend(prev[j] + prev[j + 1] for j in range(r - 1))
             row.append(1)
         triangle.append(row)
     return triangle
 
-# ========================================================
-# 2. Bölge Seçici Fonksiyonlar
-# ========================================================
 
-def kececi_binomial_square(binomial_triangle_data, square_size, start_row_index, alignment_type):
-    if square_size < 1:
-        raise ValueError("Square size must be at least 1.")
-    if start_row_index < 0:
-        raise ValueError("Start row index must be >= 0.")
-    if start_row_index + square_size > len(binomial_triangle_data):
-        raise ValueError(f"Square of size {square_size} starting at row {start_row_index} exceeds available rows.")
+def generate_narayana_triangle(num_rows: int) -> List[List[int]]:
+    """Generate Narayana triangle: N(n,k) = C(n,k)*C(n,k-1)/n."""
+    if num_rows < 1:
+        raise ValueError("Number of rows must be at least 1.")
+    triangle = []
+    for n in range(1, num_rows + 1):
+        row = [comb(n, k) * comb(n, k - 1) // n for k in range(1, n + 1)]
+        triangle.append(row)
+    return triangle
+
+
+# =============================================================================
+# 2. HELPER: SLICE CALCULATOR
+# =============================================================================
+def _get_slice_indices(row_length: int, elements: int, alignment: str) -> Tuple[int, int]:
+    """Calculate start/end column indices for a given alignment."""
+    if alignment == "left":
+        return 0, elements
+    if alignment == "right":
+        return row_length - elements, row_length
+    # center
+    start = (row_length - elements) // 2
+    return start, start + elements
+
+
+# =============================================================================
+# 3. REGION SELECTORS (BINOMIAL) - STANDARDIZED PARAMETER NAMES
+# =============================================================================
+def kececi_binomial_square(triangle: List[List[int]], size: int, start_row: int, alignment: str) -> Tuple[List[int], int, List[Dict]]:
+    """Select a square region from binomial triangle."""
+    if size < 1 or start_row < 0 or start_row + size > len(triangle):
+        raise ValueError("Invalid square parameters.")
     
-    series_data = []
-    selected_indices_info = []
+    series, info = [], []
+    for i in range(size):
+        row_idx = start_row + i
+        row = triangle[row_idx]
+        if size > len(row):
+            raise ValueError(f"Row {row_idx + 1} too short for square.")
+        s, e = _get_slice_indices(len(row), size, alignment)
+        series.extend(row[s:e])
+        info.append({"row_index": row_idx, "slice_start_col": s, "slice_end_col": e})
+    return series, sum(series), info
+
+
+def kececi_binomial_triangle(triangle: List[List[int]], size: int, start_row: int, alignment: str) -> Tuple[List[int], int, List[Dict]]:
+    """Select a triangular region from binomial triangle."""
+    if size < 1 or start_row < 0 or start_row + size > len(triangle):
+        raise ValueError("Invalid triangle parameters.")
     
-    for i in range(square_size):
-        current_row_idx = start_row_index + i
-        current_row = binomial_triangle_data[current_row_idx]
-        row_length = len(current_row)
-        
-        if square_size > row_length:
-            raise ValueError(f"Cannot fit square of size {square_size} in row {current_row_idx + 1}.")
-        
-        if alignment_type == "left":
-            start_col = 0
-        elif alignment_type == "right":
-            start_col = row_length - square_size
-        elif alignment_type == "center":
-            start_col = (row_length - square_size) // 2
-        else:
-            raise ValueError("Invalid alignment. Use 'left', 'right', or 'center'.")
-        
-        if start_col < 0:
-            raise ValueError(f"Invalid start column {start_col} for row {current_row_idx + 1}.")
-        
-        end_col = start_col + square_size
-        segment = current_row[start_col:end_col]
-        series_data.extend(segment)
-        selected_indices_info.append({
-            "row_index": current_row_idx,
-            "slice_start_col": start_col,
-            "slice_end_col": end_col
-        })
+    series, info = [], []
+    for i in range(size):
+        row_idx = start_row + i
+        row = triangle[row_idx]
+        elements = i + 1
+        if elements > len(row):
+            raise ValueError(f"Row {row_idx + 1} too short.")
+        s, e = _get_slice_indices(len(row), elements, alignment)
+        series.extend(row[s:e])
+        info.append({"row_index": row_idx, "slice_start_col": s, "slice_end_col": e})
+    return series, sum(series), info
+
+
+def kececi_binomial_diamond(triangle: List[List[int]], size: int, start_row: int, alignment: str) -> Tuple[List[int], int, List[Dict]]:
+    """Select a diamond-shaped region (center alignment only)."""
+    if alignment != "center":
+        raise ValueError("Diamond only supports 'center' alignment.")
+    if size < 1 or start_row < 0:
+        raise ValueError("Invalid diamond parameters.")
     
-    total_value = sum(series_data)
-    return series_data, total_value, selected_indices_info
-
-
-def kececi_binomial_triangle(binomial_triangle_data, triangle_size, start_row_index, alignment_type):
-    if triangle_size < 1:
-        raise ValueError("Triangle size must be at least 1.")
-    if start_row_index < 0:
-        raise ValueError("Start row index must be >= 0.")
-    if start_row_index + triangle_size > len(binomial_triangle_data):
-        raise ValueError(f"Triangle of size {triangle_size} starting at row {start_row_index} exceeds available rows.")
+    height = 2 * size - 1
+    if start_row + height > len(triangle):
+        raise ValueError("Diamond exceeds triangle bounds.")
     
-    series_data = []
-    selected_indices_info = []
+    series, info = [], []
+    # Upper half including middle
+    for i in range(size):
+        r = start_row + i
+        row = triangle[r]
+        s, e = _get_slice_indices(len(row), i + 1, "center")
+        series.extend(row[s:e])
+        info.append({"row_index": r, "slice_start_col": s, "slice_end_col": e})
+    # Lower half
+    for i in range(1, size):
+        r = start_row + size - 1 + i
+        row = triangle[r]
+        s, e = _get_slice_indices(len(row), size - i, "center")
+        series.extend(row[s:e])
+        info.append({"row_index": r, "slice_start_col": s, "slice_end_col": e})
+    return series, sum(series), info
+
+
+def kececi_binomial_staircase(triangle: List[List[int]], size: int, start_row: int, alignment: str) -> Tuple[List[int], int, List[Dict]]:
+    """Select a staircase (right triangle) region."""
+    return kececi_binomial_triangle(triangle, size, start_row, alignment)
+
+
+def kececi_binomial_trapezoid(triangle: List[List[int]], size: int, start_row: int, alignment: str) -> Tuple[List[int], int, List[Dict]]:
+    """Select a trapezoid region."""
+    if size < 1 or start_row < 0 or start_row + size > len(triangle):
+        raise ValueError("Invalid trapezoid parameters.")
     
-    for i in range(triangle_size):
-        current_row_idx = start_row_index + i
-        current_row = binomial_triangle_data[current_row_idx]
-        row_length = len(current_row)
-        elements_to_select = i + 1
-        
-        if elements_to_select > row_length:
-            raise ValueError(f"Cannot select {elements_to_select} elements in row {current_row_idx + 1}.")
-        
-        if alignment_type == "left":
-            start_col = 0
-        elif alignment_type == "right":
-            start_col = row_length - elements_to_select
-        elif alignment_type == "center":
-            start_col = (row_length - elements_to_select) // 2
-        else:
-            raise ValueError("Invalid alignment.")
-        
-        if start_col < 0:
-            raise ValueError(f"Invalid start column {start_col} for row {current_row_idx + 1}.")
-        
-        end_col = start_col + elements_to_select
-        segment = current_row[start_col:end_col]
-        series_data.extend(segment)
-        selected_indices_info.append({
-            "row_index": current_row_idx,
-            "slice_start_col": start_col,
-            "slice_end_col": end_col
-        })
+    series, info = [], []
+    for offset in range(size):
+        r = start_row + offset
+        row = triangle[r]
+        width = size + offset
+        s, e = _get_slice_indices(len(row), min(width, len(row)), alignment)
+        series.extend(row[s:e])
+        info.append({"row_index": r, "slice_start_col": s, "slice_end_col": e})
+    if not series:
+        raise ValueError("Trapezoid could not be formed.")
+    return series, sum(series), info
+
+
+def kececi_binomial_zigzag(triangle: List[List[int]], size: int, start_row: int, alignment: str) -> Tuple[List[int], int, List[Dict]]:
+    """Select a zigzag region (alternating direction per row)."""
+    if size < 1 or start_row < 0 or start_row + size > len(triangle):
+        raise ValueError("Invalid zigzag parameters.")
     
-    total_value = sum(series_data)
-    return series_data, total_value, selected_indices_info
-
-
-def kececi_binomial_diamond(binomial_triangle_data, diamond_size, start_row_index, alignment_type):
-    """
-    Gerçek simetrik elmas.
-    Sadece center alignment.
-    Her satırda merkeze göre simetrik genişler/daralır.
-    """
-    if diamond_size < 1:
-        raise ValueError("Diamond size must be at least 1.")
-    if start_row_index < 0:
-        raise ValueError("Start row index must be >= 0.")
-    
-    total_height = 2 * diamond_size - 1
-    if start_row_index + total_height > len(binomial_triangle_data):
-        raise ValueError(f"Diamond of size {diamond_size} (height {total_height}) starting at row {start_row_index} exceeds available rows.")
-
-    if alignment_type != "center":
-        raise ValueError("Diamond only supports 'center' alignment for symmetric shape.")
-
-    series_data = []
-    selected_indices_info = []
-    
-    # Yukarıdan ortaya
-    for i in range(diamond_size):
-        current_row_idx = start_row_index + i
-        current_row = binomial_triangle_data[current_row_idx]
-        row_length = len(current_row)
-        elements_to_select = i + 1
-
-        if row_length < elements_to_select:
-            raise ValueError(f"Row {current_row_idx + 1} too short for diamond segment of size {elements_to_select}.")
-
-        # Merkeze göre simetrik seç
-        center = row_length // 2
-        half = elements_to_select // 2
-        start_col = center - half
-        end_col = start_col + elements_to_select
-
-        if start_col < 0 or end_col > row_length:
-            raise ValueError(f"Cannot center diamond segment of size {elements_to_select} in row {current_row_idx + 1} with length {row_length}.")
-
-        segment = current_row[start_col:end_col]
-        series_data.extend(segment)
-        selected_indices_info.append({
-            "row_index": current_row_idx,
-            "slice_start_col": start_col,
-            "slice_end_col": end_col
-        })
-
-    # Ortadan aşağıya (orta satır hariç)
-    for i in range(1, diamond_size):
-        current_row_idx = start_row_index + diamond_size - 1 + i
-        current_row = binomial_triangle_data[current_row_idx]
-        row_length = len(current_row)
-        elements_to_select = diamond_size - i
-
-        if row_length < elements_to_select:
-            raise ValueError(f"Row {current_row_idx + 1} too short for diamond segment of size {elements_to_select}.")
-
-        center = row_length // 2
-        half = elements_to_select // 2
-        start_col = center - half
-        end_col = start_col + elements_to_select
-
-        if start_col < 0 or end_col > row_length:
-            raise ValueError(f"Cannot center diamond segment of size {elements_to_select} in row {current_row_idx + 1} with length {row_length}.")
-
-        segment = current_row[start_col:end_col]
-        series_data.extend(segment)
-        selected_indices_info.append({
-            "row_index": current_row_idx,
-            "slice_start_col": start_col,
-            "slice_end_col": end_col
-        })
-    
-    total_value = sum(series_data)
-    return series_data, total_value, selected_indices_info
-
-
-def kececi_binomial_staircase(binomial_triangle_data, staircase_size, start_row_index, alignment_type):
-    """
-    Dik üçgen şeklinde merdiven.
-    - left: sağ taraf dik →
-    - right: sol taraf dik →
-    - center: tepe merkezde →
-    """
-    if staircase_size < 1:
-        raise ValueError("Staircase size must be at least 1.")
-    if start_row_index < 0:
-        raise ValueError("Start row index must be >= 0.")
-    if start_row_index + staircase_size > len(binomial_triangle_data):
-        raise ValueError(f"Staircase of size {staircase_size} starting at row {start_row_index} exceeds available rows.")
-    
-    series_data = []
-    selected_indices_info = []
-    
-    for i in range(staircase_size):
-        current_row_idx = start_row_index + i
-        current_row = binomial_triangle_data[current_row_idx]
-        row_length = len(current_row)
-        elements_to_select = i + 1
-        
-        if elements_to_select > row_length:
-            raise ValueError(f"Cannot select {elements_to_select} elements in row {current_row_idx + 1}.")
-        
-        if alignment_type == "left":
-            # Sağ taraf dik: soldan başla, sağa doğru genişle
-            start_col = 0
-        elif alignment_type == "right":
-            # Sol taraf dik: sağdan başla, sola doğru genişle
-            start_col = row_length - elements_to_select
-        elif alignment_type == "center":
-            # Merkezde tepe
-            start_col = (row_length - elements_to_select) // 2
-        else:
-            raise ValueError("Invalid alignment for staircase.")
-        
-        if start_col < 0:
-            raise ValueError(f"Invalid start column {start_col} for row {current_row_idx + 1}.")
-        
-        end_col = start_col + elements_to_select
-        segment = current_row[start_col:end_col]
-        series_data.extend(segment)
-        selected_indices_info.append({
-            "row_index": current_row_idx,
-            "slice_start_col": start_col,
-            "slice_end_col": end_col
-        })
-    
-    total_value = sum(series_data)
-    return series_data, total_value, selected_indices_info
-
-def kececi_binomial_trapezoid(binomial_triangle_data, trapezoid_height, start_row_index, alignment_type):
-    """
-    Pascal üçgeni üzerinde trapezoid (yamuk) seçer.
-    alignment_type: "left", "right" veya "center"
-    """
-
-    if trapezoid_height < 1:
-        raise ValueError("Trapezoid height must be at least 1.")
-    if start_row_index < 0:
-        raise ValueError("Start row index must be >= 0.")
-    if start_row_index + trapezoid_height > len(binomial_triangle_data):
-        raise ValueError(f"Trapezoid of height {trapezoid_height} starting at row {start_row_index} exceeds available rows.")
-
-    series_data = []
-    selected_indices_info = []
-
-    for row_offset in range(trapezoid_height):
-        row_index = start_row_index + row_offset
-        row_length = len(binomial_triangle_data[row_index])
-
-        # Genişlik: trapezoid_height + row_offset (sizin varsayımınıza göre)
-        width = trapezoid_height + row_offset
-
-        if width <= 0:
-            continue
-
-        if alignment_type == "left":
-            slice_start_col = 0
-            slice_end_col = min(width, row_length)
-
-        elif alignment_type == "right":
-            slice_end_col = row_length
-            slice_start_col = max(0, row_length - width)
-
-        elif alignment_type == "center":
-            # Eğer width >= satır uzunluğu ise tüm satırı al
-            if width >= row_length:
-                slice_start_col = 0
-                slice_end_col = row_length
-            else:
-                # Simetrik merkezleme: başlangıç = floor((row_length - width)/2)
-                slice_start_col = (row_length - width) // 2
-                slice_end_col = slice_start_col + width
-
-                # Güvenlik: sınırları düzelt (genelde gerekmez ama koruyucu)
-                if slice_start_col < 0:
-                    slice_start_col = 0
-                    slice_end_col = min(row_length, width)
-                if slice_end_col > row_length:
-                    slice_end_col = row_length
-                    slice_start_col = max(0, row_length - width)
-
-        else:
-            raise ValueError(f"Unknown alignment type: {alignment_type}")
-
-        # Seçimi ekle
-        series_data.extend(binomial_triangle_data[row_index][slice_start_col:slice_end_col])
-        selected_indices_info.append({
-            "row_index": row_index,
-            "slice_start_col": slice_start_col,
-            "slice_end_col": slice_end_col
-        })
-
-    if len(series_data) == 0:
-        raise ValueError("Trapezoid could not be formed with given parameters.")
-
-    total_value = sum(series_data)
-    return series_data, total_value, selected_indices_info
-
-def kececi_binomial_zigzag(binomial_triangle_data, zigzag_size, start_row_index, alignment_type):
-    """
-    Her satırda bir öncekinden bir fazla eleman.
-    Satır satır: soldan sağa → sağdan sola → soldan sağa...
-    Hizalama: left, right, center desteklenir.
-    """
-    if zigzag_size < 1:
-        raise ValueError("Zigzag size must be at least 1.")
-    if start_row_index < 0:
-        raise ValueError("Start row index must be >= 0.")
-    if start_row_index + zigzag_size > len(binomial_triangle_data):
-        raise ValueError(f"Zigzag of size {zigzag_size} starting at row {start_row_index} exceeds available rows.")
-    
-    series_data = []
-    selected_indices_info = []
-    
-    for i in range(zigzag_size):
-        current_row_idx = start_row_index + i
-        current_row = binomial_triangle_data[current_row_idx]
-        row_length = len(current_row)
-        elements_to_select = min(i + 1, row_length)
-        
-        if alignment_type == "left":
-            start_col = 0
-        elif alignment_type == "right":
-            start_col = row_length - elements_to_select
-        elif alignment_type == "center":
-            start_col = (row_length - elements_to_select) // 2
-        else:
-            raise ValueError("Invalid alignment for zigzag.")
-        
-        if start_col < 0:
-            raise ValueError(f"Invalid start column {start_col} for row {current_row_idx + 1}.")
-        
-        end_col = start_col + elements_to_select
-        segment = current_row[start_col:end_col]
-        
-        # Çift satırlar (0,2,4...) → normal (soldan sağa)
-        # Tek satırlar (1,3,5...) → ters (sağdan sola)
+    series, info = [], []
+    for i in range(size):
+        r = start_row + i
+        row = triangle[r]
+        elements = min(i + 1, len(row))
+        s, e = _get_slice_indices(len(row), elements, alignment)
+        segment = row[s:e]
         if i % 2 == 1:
             segment = segment[::-1]
-        
-        series_data.extend(segment)
-        selected_indices_info.append({
-            "row_index": current_row_idx,
-            "slice_start_col": start_col,
-            "slice_end_col": end_col
-        })
-    
-    total_value = sum(series_data)
-    return series_data, total_value, selected_indices_info
+        series.extend(segment)
+        info.append({"row_index": r, "slice_start_col": s, "slice_end_col": e})
+    return series, sum(series), info
 
 
-def kececi_binomial_cross(binomial_triangle_data, cross_size, start_row_index, alignment_type):
-    if cross_size < 1:
-        raise ValueError("Cross size must be at least 1.")
-    if start_row_index < 0:
-        raise ValueError("Start row index must be >= 0.")
+def kececi_binomial_cross(triangle: List[List[int]], size: int, start_row: int, alignment: str) -> Tuple[List[int], int, List[Dict]]:
+    """Select a cross-shaped region."""
+    height = 2 * size - 1
+    if size < 1 or start_row < 0 or start_row + height > len(triangle):
+        raise ValueError("Invalid cross parameters.")
     
-    total_height = 2 * cross_size - 1
-    if start_row_index + total_height > len(binomial_triangle_data):
-        raise ValueError(f"Cross of size {cross_size} (height {total_height}) starting at row {start_row_index} exceeds available rows.")
+    series, info = [], []
+    mid = start_row + size - 1
     
-    series_data = []
-    selected_indices_info = []
-    mid_row = start_row_index + cross_size - 1
-    
-    for i in range(total_height):
-        current_row_idx = start_row_index + i
-        current_row = binomial_triangle_data[current_row_idx]
-        row_length = len(current_row)
+    for i in range(height):
+        r = start_row + i
+        row = triangle[r]
+        if alignment == "center":
+            center = len(row) // 2
+        elif alignment == "left":
+            center = size - 1
+        else:  # right
+            center = len(row) - size
         
-        if alignment_type == "center":
-            center_col = row_length // 2
-        elif alignment_type == "left":
-            center_col = cross_size - 1
-        elif alignment_type == "right":
-            center_col = row_length - cross_size
-        else:
-            raise ValueError("Invalid alignment for cross.")
-        
-        if center_col < 0 or center_col >= row_length:
+        if not (0 <= center < len(row)):
             continue
         
-        if current_row_idx == mid_row:
-            start_col = max(0, center_col - cross_size + 1)
-            end_col = min(row_length, center_col + cross_size)
-            for col in range(start_col, end_col):
-                series_data.append(current_row[col])
-                selected_indices_info.append({
-                    "row_index": current_row_idx,
-                    "slice_start_col": col,
-                    "slice_end_col": col + 1
-                })
+        if r == mid:
+            s, e = max(0, center - size + 1), min(len(row), center + size)
+            series.extend(row[s:e])
+            for c in range(s, e):
+                info.append({"row_index": r, "slice_start_col": c, "slice_end_col": c + 1})
         else:
-            series_data.append(current_row[center_col])
-            selected_indices_info.append({
-                "row_index": current_row_idx,
-                "slice_start_col": center_col,
-                "slice_end_col": center_col + 1
-            })
+            series.append(row[center])
+            info.append({"row_index": r, "slice_start_col": center, "slice_end_col": center + 1})
+    return series, sum(series), info
+
+
+def kececi_nested_square(triangle: List[List[int]], outer_size: int, inner_size: int, start_row: int, alignment: str) -> Tuple:
+    """
+    Select nested squares: outer square containing a smaller inner square.
+    Ana karenin içinde daha küçük bir kare oluşturur.
+    """
+    if inner_size > outer_size:
+        raise ValueError("Inner square must be <= outer square.")
     
-    total_value = sum(series_data)
-    return series_data, total_value, selected_indices_info
+    # ✅ İç çağrılarda da 'size' parametresi kullanıldığından emin olun
+    outer_series, outer_total, outer_info = kececi_binomial_square(triangle, outer_size, start_row, alignment)
+    
+    inner_start = start_row + (outer_size - inner_size) // 2
+    
+    inner_series, inner_total, inner_info = kececi_binomial_square(triangle, inner_size, inner_start, alignment)
+    
+    return outer_series, outer_total, outer_info, inner_series, inner_total, inner_info
 
 
-# ========================================================
-# 3. Şekil Çizici Yardımcı
-# ========================================================
-def draw_shape_on_axis(ax_handle, x_coord, y_coord, shape_name, item_radius, face_color, edge_color, alpha_val=0.9):
-    shape_object = None
-    if shape_name == "hexagon":
-        shape_object = RegularPolygon((x_coord, y_coord), numVertices=6, radius=item_radius,
-                                      facecolor=face_color, edgecolor=edge_color, alpha=alpha_val)
-    elif shape_name == "square":
-        side_length = item_radius * np.sqrt(2)
-        shape_object = Rectangle((x_coord - side_length / 2, y_coord - side_length / 2),
-                                 width=side_length, height=side_length,
-                                 facecolor=face_color, edgecolor=edge_color, alpha=alpha_val)
-    elif shape_name == "circle":
-        circle_radius_val = item_radius
-        shape_object = Circle((x_coord, y_coord), radius=circle_radius_val,
-                              facecolor=face_color, edgecolor=edge_color, alpha=alpha_val)
-    elif shape_name == "triangle":
-        p1 = [x_coord, y_coord + item_radius]
-        p2 = [x_coord - item_radius * np.sqrt(3)/2, y_coord - item_radius/2]
-        p3 = [x_coord + item_radius * np.sqrt(3)/2, y_coord - item_radius/2]
-        shape_object = Polygon([p1, p2, p3], closed=True,
-                               facecolor=face_color, edgecolor=edge_color, alpha=alpha_val)
+# =============================================================================
+# 4. NARAYANA REGION SELECTOR
+# =============================================================================
+def kececi_narayana_shape(triangle: List[List[int]], shape_type: str, size: int, start_row: int, alignment: str, width: Optional[int] = None) -> Tuple[List[int], int, List[Dict]]:
+    """
+    Select geometric regions from Narayana triangle.
+    Narayana üçgeni için şekil seçici.
+    Binomial fonksiyonlarıyla aynı dönüş formatını kullanır.
+    """
+    shape_type = shape_type.lower().strip()
+    valid = {"triangle", "square", "rectangle", "diamond", "polygon"}
+    if shape_type not in valid:
+        raise ValueError(f"shape_type must be one of: {', '.join(valid)}")
+    if size < 1 or start_row < 0:
+        raise ValueError("Invalid parameters.")
+    
+    series, info = [], []
+    
+    def _slice(row: List[int], count: int, align: str) -> Tuple[int, int]:
+        return _get_slice_indices(len(row), min(count, len(row)), align)
+    
+    if shape_type == "triangle":
+        if start_row + size > len(triangle):
+            raise ValueError("Triangle exceeds bounds.")
+        for i in range(size):
+            r = start_row + i
+            s, e = _slice(triangle[r], i + 1, alignment)
+            series.extend(triangle[r][s:e])
+            info.append({"row_index": r, "slice_start_col": s, "slice_end_col": e})
+    
+    elif shape_type == "square":
+        if start_row + size > len(triangle):
+            raise ValueError("Square exceeds bounds.")
+        for i in range(size):
+            r = start_row + i
+            s, e = _slice(triangle[r], size, alignment)
+            series.extend(triangle[r][s:e])
+            info.append({"row_index": r, "slice_start_col": s, "slice_end_col": e})
+    
+    elif shape_type == "rectangle":
+        w = width or size
+        if w < 1 or start_row + size > len(triangle):
+            raise ValueError("Invalid rectangle parameters.")
+        for i in range(size):
+            r = start_row + i
+            s, e = _slice(triangle[r], w, alignment)
+            series.extend(triangle[r][s:e])
+            info.append({"row_index": r, "slice_start_col": s, "slice_end_col": e})
+    
+    elif shape_type == "diamond":
+        if alignment != "center":
+            raise ValueError("Diamond requires 'center' alignment.")
+        height = 2 * size - 1
+        if start_row + height > len(triangle):
+            raise ValueError("Diamond exceeds bounds.")
+        for i in range(size):
+            r = start_row + i
+            s, e = _slice(triangle[r], i + 1, "center")
+            series.extend(triangle[r][s:e])
+            info.append({"row_index": r, "slice_start_col": s, "slice_end_col": e})
+        for i in range(1, size):
+            r = start_row + size - 1 + i
+            s, e = _slice(triangle[r], size - i, "center")
+            series.extend(triangle[r][s:e])
+            info.append({"row_index": r, "slice_start_col": s, "slice_end_col": e})
+    
+    elif shape_type == "polygon":
+        w = width or size
+        if w < 3 or start_row + size > len(triangle):
+            raise ValueError("Invalid polygon parameters.")
+        for i in range(size):
+            r = start_row + i
+            s, e = _slice(triangle[r], w, "center")
+            series.extend(triangle[r][s:e])
+            info.append({"row_index": r, "slice_start_col": s, "slice_end_col": e})
+    
+    return series, sum(series), info
+
+
+# =============================================================================
+# 5. VISUALIZATION HELPERS
+# =============================================================================
+def draw_shape_on_axis(ax, x: float, y: float, shape: str, radius: float, face_color: str, edge_color: str, alpha: float = 0.9):
+    """Draw a geometric shape at given coordinates."""
+    if shape == "hexagon":
+        # ✅ radius= keyword argument olarak geçmeli
+        ax.add_patch(RegularPolygon((x, y), numVertices=6, radius=radius, facecolor=face_color, edgecolor=edge_color, alpha=alpha))
+    elif shape == "square":
+        side = radius * np.sqrt(2)
+        ax.add_patch(Rectangle((x - side/2, y - side/2), side, side, facecolor=face_color, edgecolor=edge_color, alpha=alpha))
+    elif shape == "circle":
+        ax.add_patch(Circle((x, y), radius=radius, facecolor=face_color, edgecolor=edge_color, alpha=alpha))
+    elif shape == "triangle":
+        pts = [(x, y + radius), (x - radius*np.sqrt(3)/2, y - radius/2), (x + radius*np.sqrt(3)/2, y - radius/2)]
+        ax.add_patch(Polygon(pts, closed=True, facecolor=face_color, edgecolor=edge_color, alpha=alpha))
     else:
-        shape_object = RegularPolygon((x_coord, y_coord), numVertices=6, radius=item_radius,
-                                      facecolor=face_color, edgecolor=edge_color, alpha=alpha_val)
-    if shape_object:
-        ax_handle.add_patch(shape_object)
+        ax.add_patch(RegularPolygon((x, y), numVertices=6, radius=radius, facecolor=face_color, edgecolor=edge_color, alpha=alpha))
 
 
-# ========================================================
-# 4. Jenerik Görselleştirici (Tüm Bölgeler İçin)
-# ========================================================
-def draw_kececi_binomial_region(
-    num_rows_to_draw,
-    region_size,
-    start_row_index_0based,
-    region_type="square",
-    shape_to_draw="hexagon",
-    alignment="left",
-    is_filled=True,
-    color_palette_name="tab20",
-    show_plot=True,
-    fig_ax=None,
-    show_values=True
-):
-    if num_rows_to_draw <= 0:
-        print("Number of rows must be at least 1.")
-        return None, None
+# =============================================================================
+# 6. MAIN VISUALIZATION ENGINE
+# =============================================================================
+def draw_kececi_region(triangle_data: List[List[int]], num_rows: int, region_size: int, 
+                       start_row_0based: int, region_type: str = "square", 
+                       shape_to_draw: str = "hexagon", alignment: str = "left",
+                       is_filled: bool = True, show_values: bool = True,
+                       triangle_source: str = "binomial", narayana_shape_type: Optional[str] = None,
+                       narayana_width: Optional[int] = None, show_plot: bool = True,
+                       fig_ax: Optional[Tuple[plt.Figure, plt.Axes]] = None) -> Tuple[Optional[plt.Figure], Optional[plt.Axes], List[int], List[Dict], int]:
+    """
+    Unified visualization engine for Binomial and Narayana triangles.
+    
+    Returns:
+        tuple: (fig, ax, series_data, selected_indices_info, total_value)
 
-    binomial_triangle = generate_binomial_triangle(num_rows_to_draw)
-
-    # Bölgeyi seç
+    Birleştirilmiş görselleştirici: Hem Binomial hem Narayana üçgenlerini
+    aynı grafiksel yeteneklerle (altıgen/kare/daire/üçgen, renklendirme, 
+    kenarlık vurgulama) çizer.
+    """
+    if num_rows < 1:
+        raise ValueError("Number of rows must be at least 1.")
+    
+    # Select region
     try:
-        if region_type == "square":
-            series, total_value, selected_indices_info = kececi_binomial_square(
-                binomial_triangle, region_size, start_row_index_0based, alignment)
-            region_label = "Square-Kare-Eşkenar Dikdörtgen"
-            symbol = "■,□,▰"
-        elif region_type == "triangle":
-            series, total_value, selected_indices_info = kececi_binomial_triangle(
-                binomial_triangle, region_size, start_row_index_0based, alignment)
-            region_label = "Triangle-Üçgen"
-            symbol = "▲,Δ"
-        elif region_type == "diamond":
-            series, total_value, selected_indices_info = kececi_binomial_diamond(
-                binomial_triangle, region_size, start_row_index_0based, alignment)
-            region_label = "Diamond-Elmas"
+        if triangle_source == "narayana":
+            series_data, total_value, selected_indices_info = kececi_narayana_shape(
+                triangle_data, narayana_shape_type or region_type, region_size, 
+                start_row_0based, alignment, narayana_width)
+            region_label = f"Narayana-{narayana_shape_type or region_type}".title()
             symbol = "◆"
-        elif region_type == "staircase":
-            series, total_value, selected_indices_info = kececi_binomial_staircase(
-                binomial_triangle, region_size, start_row_index_0based, alignment)
-            region_label = "Staircase-Merdiven"
-            symbol = "◣,◺" if alignment == "left" else "◿" if alignment == "right" else "⏷"
-        elif region_type == "trapezoid":
-            series, total_value, selected_indices_info = kececi_binomial_trapezoid(
-                binomial_triangle, region_size, start_row_index_0based, alignment)
-            region_label = "Isosceles Trapezoid-İkizkenar Trapezoid"
-            symbol = "◧"
-        elif region_type == "zigzag":
-            series, total_value, selected_indices_info = kececi_binomial_zigzag(
-                binomial_triangle, region_size, start_row_index_0based, alignment)
-            region_label = "Zigzag-Zikzak"
-            symbol = "⧓"
-        elif region_type == "cross":
-            series, total_value, selected_indices_info = kececi_binomial_cross(
-                binomial_triangle, region_size, start_row_index_0based, alignment)
-            region_label = "Cross-Çapraz"
-            symbol = "🞮,x"
         else:
-            print(f"Unknown region type: {region_type}")
-            return None, None
-    except ValueError as e:
-        print(f"Error selecting region: {e}")
-        return None, None
-
-    print(f"Keçeci Binomial {region_label} Series ({alignment}): {series}")
-    print(f"Keçeci Binomial {region_label} Total Value: {total_value}")
-
-    # Renk paleti
-    num_colors_for_colormap = max(2, num_rows_to_draw)
-    row_colors = plt.colormaps[color_palette_name](np.linspace(0, 1, num_colors_for_colormap))
-
-    # Altıgen merkezleri
-    def calculate_hexagon_centers(num_rows_centers):
-        centers_list = []
-        for r_idx in range(num_rows_centers):
-            for c_idx in range(r_idx + 1):
-                x_center = c_idx - r_idx / 2.0
-                y_center = -r_idx * np.sqrt(3) / 2.0
-                centers_list.append((x_center, y_center))
-        return centers_list
-
-    # Figür/Ax
-    if fig_ax is None:
-        fig, main_ax = plt.subplots(figsize=(max(6, num_rows_to_draw * 1.0), max(6, num_rows_to_draw * 0.9)))
-    else:
-        fig, main_ax = fig_ax
-    main_ax.clear()
-    main_ax.set_aspect('equal')
-    main_ax.axis('off')
-
-    item_centers = calculate_hexagon_centers(num_rows_to_draw)
-
-    # Vurgulanacak elemanların global indeksleri
-    highlighted_item_global_indices = set()
-    global_index_offset_per_row = [0] * num_rows_to_draw
-    current_global_offset = 0
-    for r_idx_offset in range(num_rows_to_draw):
-        global_index_offset_per_row[r_idx_offset] = current_global_offset
-        current_global_offset += (r_idx_offset + 1)
-
-    for info_dict in selected_indices_info:
-        row_idx_in_triangle = info_dict["row_index"]
-        slice_start_col_idx = info_dict["slice_start_col"]
-        slice_end_col_idx = info_dict["slice_end_col"]
-        if 0 <= row_idx_in_triangle < len(global_index_offset_per_row):
-            row_start_global_idx = global_index_offset_per_row[row_idx_in_triangle]
-            for col_idx_in_row in range(slice_start_col_idx, slice_end_col_idx):
-                highlighted_item_global_indices.add(row_start_global_idx + col_idx_in_row)
-
-    # Kenar bilgisi (sadece outline için)
-    highlighted_region_row_column_bounds = {}
-    for info_dict in selected_indices_info:
-        if info_dict["row_index"] not in highlighted_region_row_column_bounds:
-            highlighted_region_row_column_bounds[info_dict["row_index"]] = {
-                "start_col": info_dict["slice_start_col"],
-                "end_col": info_dict["slice_end_col"]
+            selectors = {
+                "square": kececi_binomial_square, "triangle": kececi_binomial_triangle,
+                "diamond": kececi_binomial_diamond, "staircase": kececi_binomial_staircase,
+                "trapezoid": kececi_binomial_trapezoid, "zigzag": kececi_binomial_zigzag,
+                "cross": kececi_binomial_cross
             }
-
-    # Şekilleri çiz
-    global_item_counter = 0
-    shape_radius = 0.5
-
-    for r_idx_triangle in range(num_rows_to_draw):
-        for c_idx_triangle in range(r_idx_triangle + 1):
-            if global_item_counter >= len(item_centers):
-                break
-
-            x_pos, y_pos = item_centers[global_item_counter]
-            default_item_color = row_colors[min(r_idx_triangle, len(row_colors)-1)]
-            face_color_for_item = default_item_color
-
-            is_item_in_highlighted_region = global_item_counter in highlighted_item_global_indices
-
-            if is_item_in_highlighted_region:
-                if is_filled:
-                    face_color_for_item = 'gold'
-                else:
-                    bounds_for_current_row = highlighted_region_row_column_bounds.get(r_idx_triangle)
-                    if bounds_for_current_row:
-                        is_top_row = (r_idx_triangle == start_row_index_0based)
-                        is_bottom_row = False
-                        total_height = region_size
-                        if region_type == "diamond":
-                            total_height = 2 * region_size - 1
-                            is_bottom_row = (r_idx_triangle == start_row_index_0based + total_height - 1)
-                        elif region_type == "cross":
-                            total_height = 2 * region_size - 1
-                            is_bottom_row = (r_idx_triangle == start_row_index_0based + total_height - 1)
-                        else:
-                            is_bottom_row = (r_idx_triangle == start_row_index_0based + region_size - 1)
-
-                        is_left_edge = (c_idx_triangle == bounds_for_current_row["start_col"])
-                        is_right_edge = (c_idx_triangle == bounds_for_current_row["end_col"] - 1)
-
-                        is_border_item = False
-
-                        if region_type == "square":
-                            if is_top_row or is_bottom_row or is_left_edge or is_right_edge:
-                                is_border_item = True
-                        elif region_type == "triangle":
-                            if is_top_row and is_left_edge and is_right_edge:
-                                is_border_item = True
-                            elif is_bottom_row:
-                                is_border_item = True
-                            elif is_left_edge or is_right_edge:
-                                is_border_item = True
-                        elif region_type == "diamond":
-                            mid_row = start_row_index_0based + region_size - 1
-                            if is_top_row or is_bottom_row:
-                                if is_left_edge and is_right_edge:
-                                    is_border_item = True
-                            elif r_idx_triangle == mid_row:
-                                is_border_item = is_left_edge or is_right_edge
-                            else:
-                                is_border_item = is_left_edge or is_right_edge
-                        elif region_type == "staircase":
-                            if is_top_row:
-                                is_border_item = True
-                            elif is_bottom_row:
-                                is_border_item = True
-                            elif is_left_edge:
-                                is_border_item = True
-                            elif is_right_edge:
-                                is_border_item = True
-                        elif region_type == "cross":
-                            is_border_item = True
-                        elif region_type in ["trapezoid", "zigzag"]:
-                            is_border_item = True
-
-                        if is_border_item:
-                            face_color_for_item = 'gold'
-
-            draw_shape_on_axis(main_ax, x_pos, y_pos, shape_to_draw, item_radius=shape_radius,
-                               face_color=face_color_for_item, edge_color='black')
-
-            if show_values:
-                text_font_size = max(4, 10 - (num_rows_to_draw // 5))
-                plt.text(x_pos, y_pos, str(binomial_triangle[r_idx_triangle][c_idx_triangle]),
-                         ha='center', va='center', fontsize=text_font_size, color='black')
-
-            global_item_counter += 1
-        if global_item_counter >= len(item_centers):
-            break
-
-    # Eksen sınırları
-    plot_padding = 0.5
-    min_x_lim = -num_rows_to_draw / 2.0 * (shape_radius/0.5) - plot_padding
-    max_x_lim = num_rows_to_draw / 2.0 * (shape_radius/0.5) + plot_padding
-    min_y_lim = (-num_rows_to_draw + 1) * (np.sqrt(3)/2.0) * (shape_radius/0.5) - plot_padding
-    max_y_lim = 0.0 + shape_radius + plot_padding
-    main_ax.set_xlim(min_x_lim, max_x_lim)
-    main_ax.set_ylim(min_y_lim, max_y_lim)
-
-    # Başlık
-    alignment_display_map = {"left": "Left-Aligned", "right": "Right-Aligned", "center": "Centered"}
-    fill_display_text = "Filled" if is_filled else "Empty (Outlined)"
-
-    plot_title_str = (
-        f"{alignment_display_map.get(alignment, alignment)} and {fill_display_text} Keçeci Binomial {region_label}\n"
-        f"{symbol}{region_size} from row {start_row_index_0based + 1} / {num_rows_to_draw} Rows\n"
-        f"Python: {PYTHON_VERSION_INFO}, Date: {CURRENT_DATE_INFO}"
-    )
-    main_ax.set_title(plot_title_str, fontsize=10, fontweight='bold', pad=10)
-
+            if region_type == "nested":
+                outer, _, outer_info, inner, _, inner_info = kececi_nested_square(
+                    triangle_data, region_size, region_size//2, start_row_0based, alignment)
+                series_data = outer + inner
+                selected_indices_info = outer_info + inner_info
+                total_value = sum(series_data)
+                region_label = "Nested-İç İçe"
+                symbol = "◫"
+            elif region_type in selectors:
+                series_data, total_value, selected_indices_info = selectors[region_type](
+                    triangle_data, region_size, start_row_0based, alignment)
+                region_label = region_type.capitalize()
+                symbol = {"square": "■", "triangle": "▲", "diamond": "◆", "cross": "✚"}.get(region_type, "●")
+            else:
+                raise ValueError(f"Unsupported region type: {region_type}")
+    except ValueError as e:
+        print(f"❌ Selection error: {e}")
+        return None, None, [], [], 0
+    
+    print(f"📊 Keçeci {triangle_source.title()} {region_label} ({alignment}): Total = {total_value:,} | Elements = {len(series_data)}")
+    
+    # Grid coordinates for hexagonal layout
+    centers = [(c - r/2, -r * np.sqrt(3)/2) for r in range(num_rows) for c in range(r+1)]
+    row_offsets = [sum(range(r+1)) for r in range(num_rows)]
+    
+    # Track highlighted cells
+    highlighted = set()
+    for info in selected_indices_info:
+        r, s, e = info["row_index"], info["slice_start_col"], info["slice_end_col"]
+        if 0 <= r < num_rows:
+            base = row_offsets[r]
+            highlighted.update(base + c for c in range(s, e))
+    
+    # Setup figure
     if fig_ax is None:
-        plt.tight_layout(pad=1.0)
-
+        fig, ax = plt.subplots(figsize=(max(6, num_rows), max(6, num_rows * 0.8)))
+    else:
+        fig, ax = fig_ax
+    ax.clear()
+    ax.set_aspect("equal")
+    ax.axis("off")
+    
+    cmap = plt.colormaps["tab20"]
+    colors = cmap(np.linspace(0, 1, max(2, num_rows)))
+    radius = 0.5
+    
+    # Draw all cells
+    global_idx = 0
+    for r in range(num_rows):
+        for c in range(r + 1):
+            if global_idx >= len(centers):
+                break
+            x, y = centers[global_idx]
+            is_selected = global_idx in highlighted
+            color = "gold" if is_selected and is_filled else colors[min(r, len(colors)-1)]
+            
+            draw_shape_on_axis(ax, x, y, shape_to_draw, radius, color, "black")
+            
+            if show_values and r < len(triangle_data) and c < len(triangle_data[r]):
+                ax.text(x, y, str(triangle_data[r][c]), ha="center", va="center", 
+                       fontsize=max(4, 9 - num_rows//6), color="black")
+            global_idx += 1
+    
+    # Axis limits
+    pad = 0.6
+    ax.set_xlim(-num_rows/2 - pad, num_rows/2 + pad)
+    ax.set_ylim(-num_rows * np.sqrt(3)/2 - pad, pad)
+    
+    # Title
+    align_map = {"left": "Left", "right": "Right", "center": "Centered"}
+    fill_text = "Filled" if is_filled else "Outlined"
+    src = "Narayana" if triangle_source == "narayana" else "Binomial"
+    ax.set_title(f"{align_map.get(alignment, alignment)} {fill_text} Keçeci {src} {region_label}\n"
+                f"{symbol}{region_size} from row {start_row_0based+1} / {num_rows} Rows\n"
+                f"Python {PYTHON_VERSION} | {TIMESTAMP}", fontsize=10, fontweight="bold")
+    
+    if fig_ax is None:
+        plt.tight_layout()
+    
+    # Console reports (only for small triangles)
+    if series_data and num_rows <= 25:
+        print_console_reports(triangle_data, series_data, selected_indices_info, 
+                              triangle_source, region_label, num_rows)
+    
     if show_plot and fig_ax is None:
         plt.show()
+    
+    return fig, ax, series_data, selected_indices_info, total_value
 
-    return fig, main_ax
+
+def print_console_reports(triangle: List[List[int]], series: List[int], indices: List[Dict], 
+                          source: str, label: str, num_rows: int):
+    """Print triangle matrix and statistics to console."""
+    # Matrix with highlights
+    highlight_set = {(info["row_index"], c) for info in indices for c in range(info["slice_start_col"], info["slice_end_col"])}
+    print_triangle_matrix(triangle, highlight_set, f"{source.title()} Triangle ({num_rows} rows)")
+    
+    # Statistics
+    stats = calculate_region_statistics(series, label)
+    print_detailed_report(series, indices, source, label, stats)
+    
+    # Patterns
+    patterns = detect_patterns(series)
+    if patterns:
+        print("🔍 Pattern Detection:")
+        for p in patterns:
+            print(f"   {p}")
+        print()
 
 
-# ========================================================
-# 5. Kullanıcıdan Parametre Alan Interaktif Menü (GELİŞTİRİLMİŞ)
-# ========================================================
-def get_user_parameters_for_region():
-    print("--- Configure Binomial Triangle Visualization ---")
-    try:
-        region_prompt = (
-            "Region type (1: Square, 2: Triangle, 3: Diamond, 4: Staircase, "
-            "5: Trapezoid, 6: Zigzag, 7: Cross; default: 1-Square): "
-        )
-        region_choice = input(region_prompt).strip()
-        region_map = {
-            "1": "square",
-            "2": "triangle",
-            "3": "diamond",
-            "4": "staircase",
-            "5": "trapezoid",
-            "6": "zigzag",
-            "7": "cross"
-        }
-        region_type = "square"
-        if region_choice == "":
-            print("Defaulting to 'Square' (1).")
-        elif region_choice in region_map:
-            region_type = region_map[region_choice]
-            print(f"Selected region type: {region_type.upper()}")
-        else:
-            print("Invalid choice. Defaulting to 'Square' (1).")
-
-        num_rows = int(input("Enter number of rows for Pascal's Triangle (e.g., 8, min: 1): "))
-        if num_rows < 1:
-            print("Error: Number of rows must be at least 1.")
-            return None
-
-        # Boyut ve başlangıç satırı hesaplamaları
-        if region_type in ["diamond", "cross"]:
-            max_size = (num_rows + 1) // 2
-            size_prompt = f"Enter {region_type} size (1-{max_size}, e.g., 3): "
-        else:
-            max_size = num_rows
-            size_prompt = f"Enter {region_type} size (1-{num_rows}, e.g., 3): "
-
-        region_size = int(input(size_prompt))
-        if not (1 <= region_size <= max_size):
-            print(f"Error: {region_type.capitalize()} size must be between 1 and {max_size}.")
-            return None
-
-        if region_type in ["diamond", "cross"]:
-            total_height = 2 * region_size - 1
-            max_start_row_0idx = num_rows - total_height
-        else:
-            max_start_row_0idx = num_rows - region_size
-
-        min_start_row_0idx = 0
-        if min_start_row_0idx > max_start_row_0idx:
-            print(f"A {region_type} of size {region_size} cannot fit in {num_rows} rows.")
-            return None
-
-        start_row_prompt = f"Enter starting row (1-indexed, between {min_start_row_0idx+1} and {max_start_row_0idx+1}): "
-        start_row_user = int(input(start_row_prompt))
-        start_row_0idx = start_row_user - 1
-
-        if not (min_start_row_0idx <= start_row_0idx <= max_start_row_0idx):
-            print(f"Error: Starting row must be between {min_start_row_0idx+1} and {max_start_row_0idx+1}.")
-            return None
-
-        # Hizalama kısıtlamaları
-        if region_type == "diamond":
-            alignment = "center"
-            print("♦ Diamond only supports CENTER alignment. Automatically set.")
-
-        else:
-            align_prompt = "Alignment (1: Left, 2: Right, 3: Centered; default: 1-Left): "
-            align_choice = input(align_prompt).strip()
-            align_map = {"1": "left", "2": "right", "3": "center"}
-            alignment = "left"
-            if align_choice == "":
-                print("Defaulting to 'Left-Aligned' (1).")
-            elif align_choice in align_map:
-                alignment = align_map[align_choice]
+# =============================================================================
+# 7. CONSOLE OUTPUT UTILITIES
+# =============================================================================
+def print_triangle_matrix(triangle: List[List[int]], highlight: Optional[set] = None, title: str = "Matrix"):
+    """
+    Print triangle as formatted ASCII matrix with optional highlighting.
+    Üçgen verisini terminalde formatlı matris olarak yazdırır.
+    highlight_indices: vurgulanacak (row, col) tuple'ları set'i
+    """
+    print(f"\n{'='*60}\n  {title}\n{'='*60}")
+    if not triangle:
+        print("  (empty)")
+        return
+    max_w = len(str(max(max(row) for row in triangle))) + 2
+    for r, row in enumerate(triangle):
+        indent = " " * ((len(triangle) - r) * (max_w // 2))
+        print(indent, end="")
+        for c, val in enumerate(row):
+            hl = highlight and (r, c) in highlight
+            if hl:
+                print(f"\033[1;33m[{val:>{max_w-2}}]\033[0m", end="")
             else:
-                print("Invalid alignment. Defaulting to 'Left-Aligned' (1).")
+                print(f" {val:>{max_w-2}} ", end="")
+        print()
+    print(f"{'='*60}\n")
 
-        shape_prompt = "Shape type (1: hexagon, 2: square, 3: circle, 4: triangle; default: 1-hexagon): "
-        shape_choice = input(shape_prompt).strip()
-        shape_map = {"1": "hexagon", "2": "square", "3": "circle", "4": "triangle"}
-        shape_type = "hexagon"
-        if shape_choice == "":
-            print("Defaulting to 'hexagon' (1).")
-        elif shape_choice in shape_map:
-            shape_type = shape_map[shape_choice]
-        else:
-            print("Invalid shape type. Defaulting to 'hexagon' (1).")
 
-        fill_prompt = "Fill the region? (1: Yes, 2: No; default: 1-Yes): "
-        fill_choice = input(fill_prompt).strip()
-        is_filled = True
-        if fill_choice == "2":
-            is_filled = False
-        elif fill_choice not in ["1", ""]:
-            print("Invalid choice. Defaulting to 'Yes' (1).")
+def calculate_region_statistics(series: List[int], label: str = "Region") -> Dict[str, Any]:
+    """Calculate comprehensive statistics for a data series."""
+    if not series:
+        return {}
+    s = {
+        "count": len(series), "sum": sum(series), "min": min(series), "max": max(series),
+        "mean": mean(series), "median": median(series),
+        "variance": variance(series) if len(series) > 1 else 0,
+        "std_dev": stdev(series) if len(series) > 1 else 0,
+        "unique": len(set(series)), "most_common": Counter(series).most_common(3)
+    }
+    s["range"] = s["max"] - s["min"]
+    s["cv"] = (s["std_dev"] / s["mean"] * 100) if s["mean"] != 0 else 0
+    s["even"] = sum(1 for x in series if x % 2 == 0)
+    s["odd"] = s["count"] - s["even"]
+    return s
 
-        show_val_prompt = "Show numbers inside shapes? (1: Yes, 2: No; default: 1-Yes): "
-        show_val_choice = input(show_val_prompt).strip()
-        show_numbers = True
-        if show_val_choice == "2":
-            show_numbers = False
-        elif show_val_choice not in ["1", ""]:
-            print("Invalid choice. Defaulting to show numbers (1).")
 
-        return {
-            "num_rows": num_rows,
-            "region_size": region_size,
-            "start_row_0idx": start_row_0idx,
-            "region_type": region_type,
-            "shape_type": shape_type,
-            "alignment": alignment,
-            "is_filled": is_filled,
-            "show_numbers": show_numbers,
+def print_detailed_report(series: List[int], indices: List[Dict], source: str, label: str, stats: Dict):
+    """Print detailed analysis report to console."""
+    print(f"\n📊 DETAILED ANALYSIS REPORT\n{'─'*60}")
+    print(f"\n🔹 Region: {label.upper()} | Source: {source.title()}")
+    print(f"   Elements: {stats['count']} | Sum: {stats['sum']:,}")
+    
+    print(f"\n🔹 Descriptive Statistics:")
+    print(f"   {'Metric':<15} {'Value':>15}\n   {'─'*30}")
+    for k, v in [("Min", stats["min"]), ("Max", stats["max"]), ("Mean", f"{stats['mean']:.4f}"),
+                 ("Median", f"{stats['median']:.4f}"), ("Std Dev", f"{stats['std_dev']:.4f}"),
+                 ("Variance", f"{stats['variance']:.4f}"), ("CV (%)", f"{stats['cv']:.2f}"),
+                 ("Range", stats["range"]), ("Unique", stats["unique"])]:
+        print(f"   {k:<15} {v:>15}")
+    
+    print(f"\n🔹 Parity: Even {stats['even']} ({stats['even']/len(series)*100:.1f}%) | Odd {stats['odd']}")
+    
+    if stats["most_common"]:
+        print(f"\n🔹 Most Common:")
+        for val, freq in stats["most_common"]:
+            print(f"   {val:,} ×{freq}")
+    
+    print(f"\n🔹 Selected Cells (first 20):")
+    print(f"   {'Row':>4} {'Col':>4} {'Value':>10}\n   {'─'*20}")
+    for i, info in enumerate(indices[:20]):
+        r = info["row_index"] + 1
+        for c in range(info["slice_start_col"]+1, info["slice_end_col"]+1):
+            val = series[i] if i < len(series) else ""
+            print(f"   {r:>4} {c:>4} {val:>10,}")
+    if len(indices) > 20:
+        print(f"   ... +{len(indices)-20} more")
+    
+    print(f"\n🔹 Series Preview: {series[:30]}{'...' if len(series)>30 else ''}")
+    print(f"{'─'*60}\n")
+
+
+def detect_patterns(series: List[int]) -> List[str]:
+    """Detect mathematical patterns in the series."""
+    patterns = []
+    if not series:
+        return patterns
+    if series == series[::-1]:
+        patterns.append("✓ Palindromic sequence")
+    if len(series) >= 2:
+        if all(series[i] <= series[i+1] for i in range(len(series)-1)):
+            patterns.append("✓ Non-decreasing")
+        elif all(series[i] >= series[i+1] for i in range(len(series)-1)):
+            patterns.append("✓ Non-increasing")
+    primes = [x for x in series if x > 1 and all(x % d for d in range(2, int(x**0.5)+1))]
+    if primes:
+        patterns.append(f"✓ Contains {len(primes)} prime(s): {primes[:4]}{'...' if len(primes)>4 else ''}")
+    return patterns
+
+
+# =============================================================================
+# 8. EXPORT FUNCTIONS
+# =============================================================================
+def export_to_csv(series: List[int], indices: List[Dict], filepath: str = "kececi_output.csv") -> bool:
+    """
+    Export selected data to CSV file.
+    Seçili bölge verisini CSV dosyasına aktarır.
+    Args:
+        series_data: Seçilen hücrelerin değer listesi
+        selected_indices: Her hücre için {row_index, slice_start_col, slice_end_col} bilgisi
+        filepath: Çıktı dosya yolu
+    """
+    try:
+        with open(filepath, 'w', newline='', encoding='utf-8') as f:
+            w = csv.writer(f)
+            w.writerow(["index", "row_1based", "col_1based", "value"])
+            idx = 0
+            for info in indices:
+                r = info["row_index"] + 1
+                for c in range(info["slice_start_col"]+1, info["slice_end_col"]+1):
+                    w.writerow([idx, r, c, series[idx]])
+                    idx += 1
+        print(f"✅ CSV exported: {filepath} ({len(series)} records)")
+        return True
+    except Exception as e:
+        print(f"❌ CSV export failed: {e}")
+        return False
+
+
+def export_to_json(data: Dict, filepath: str = "kececi_output.json") -> bool:
+    """Export analysis results to JSON file.
+    Tüm analiz sonuçlarını JSON formatında kaydeder.
+    
+    Args:
+        export_data: Dışa aktarılacak tüm verileri içeren dictionary
+        filepath: Çıktı dosya yolu
+    """
+    try:
+        def clean(obj):
+            if isinstance(obj, (np.integer, np.floating)):
+                return float(obj)
+            if isinstance(obj, np.ndarray):
+                return obj.tolist()
+            if isinstance(obj, dict):
+                return {k: clean(v) for k, v in obj.items()}
+            if isinstance(obj, (list, tuple)):
+                return [clean(i) for i in obj]
+            return obj
+        
+        with open(filepath, 'w', encoding='utf-8') as f:
+            json.dump(clean(data), f, indent=2, ensure_ascii=False)
+        print(f"✅ JSON exported: {filepath}")
+        return True
+    except Exception as e:
+        print(f"❌ JSON export failed: {e}")
+        return False
+
+# ========================================================
+# HIGH-LEVEL REPORT GENERATOR (PUBLIC API)
+# ========================================================
+
+def generate_full_report(params: Dict[str, Any]) -> Dict[str, Optional[str]]:
+    """
+    Generate complete analysis: plot + CSV + JSON + console output.
+    
+    Args:
+        params: Dictionary with keys:
+            - triangle_source: "binomial" or "narayana"
+            - num_rows: int
+            - region_size: int
+            - start_row_0idx: int (0-based)
+            - region_type: str (square, triangle, diamond, etc.)
+            - shape_type: str (hexagon, square, circle, triangle)
+            - alignment: str (left, right, center)
+            - is_filled: bool
+            - show_numbers: bool
+            - save_path: Optional[str] for PNG
+            - csv_path: Optional[str] for CSV export
+            - json_path: Optional[str] for JSON export
+    
+    Returns:
+        Dictionary with generated file paths:
+        {
+            "plot": "path/to/file.png" or None,
+            "csv": "path/to/file.csv" or None,
+            "json": "path/to/file.json" or None,
+            "series": List[int],  # The selected values
+            "statistics": Dict,   # From calculate_region_statistics
         }
+    """
+    results = {"plot": None, "csv": None, "json": None, "series": None, "statistics": None}
+    
+    try:
+        # 1. Generate triangle
+        if params["triangle_source"] == "narayana":
+            triangle = generate_narayana_triangle(params["num_rows"])
+        else:
+            triangle = generate_binomial_triangle(params["num_rows"])
+        
+        # 2. Select region & visualize
+        result = draw_kececi_region(
+            triangle_data=triangle,
+            num_rows=params["num_rows"],
+            region_size=params["region_size"],
+            start_row_0based=params["start_row_0idx"],
+            region_type=params["region_type"],
+            shape_to_draw=params.get("shape_type", "hexagon"),
+            alignment=params.get("alignment", "left"),
+            is_filled=params.get("is_filled", True),
+            show_values=params.get("show_numbers", True),
+            triangle_source=params["triangle_source"],
+            narayana_shape_type=params.get("narayana_shape_type"),
+            narayana_width=params.get("narayana_width"),
+            show_plot=False  # Don't auto-show; user controls display
+        )
+        
+        if result[0] is None:
+            raise RuntimeError("Visualization failed")
+        
+        fig, ax, series_data, indices, total = result
+        results["series"] = series_data
+        results["statistics"] = calculate_region_statistics(series_data, params.get("region_label", "Region"))
+        
+        # 3. Save plot if requested
+        if params.get("save_path"):
+            fig.savefig(params["save_path"], dpi=200, bbox_inches="tight")
+            results["plot"] = params["save_path"]
+            print(f"✅ Plot saved: {params['save_path']}")
+        
+        # 4. Export CSV if requested
+        if params.get("csv_path"):
+            if export_to_csv(series_data, indices, params["csv_path"]):
+                results["csv"] = params["csv_path"]
+        
+        # 5. Export JSON if requested
+        if params.get("json_path"):
+            payload = {
+                "metadata": {
+                    "version": __version__, "timestamp": TIMESTAMP, "python": PYTHON_VERSION,
+                    "source": params["triangle_source"], "region": params.get("region_label"),
+                    "size": params["region_size"], "start_row": params["start_row_0idx"] + 1,
+                    "alignment": params.get("alignment")
+                },
+                "data": {"values": series_data, "sum": total, "count": len(series_data), "cells": indices},
+                "statistics": results["statistics"],
+                "config": {k: v for k, v in params.items() if k not in ("save_path", "csv_path", "json_path")}
+            }
+            if export_to_json(payload, params["json_path"]):
+                results["json"] = params["json_path"]
+        
+        # 6. Optional: show plot
+        if params.get("show_plot", True):
+            plt.show()
+        
+        return results
+        
+    except Exception as e:
+        print(f"❌ Report generation failed: {e}")
+        return results
 
-    except ValueError:
-        print("Error: Invalid numerical input.")
+
+# =============================================================================
+# 9. INTERACTIVE PARAMETER COLLECTION
+# =============================================================================
+def get_user_parameters() -> Optional[Dict]:
+    """
+    Collect visualization parameters via interactive CLI.
+    Tek bir fonksiyon altında hem Keçeci Binomial Shapes 
+    hem de Keçeci-Narayana Shapes için parametre toplar.
+    Tüm çıktı anahtarları tutarlıdır: triangle_source, num_rows, region_type, vb.
+    """
+    print("="*60 + "\n   KEÇECI BINOMIAL & NARAYANA SHAPES VISUALIZER\n" + "="*60)
+    
+    try:
+        # System selection
+        sys_choice = input("\n1: Binomial (Pascal)  2: Narayana (default:1): ").strip() or "1"
+        source = "narayana" if sys_choice == "2" else "binomial"
+        print(f"✓ Selected: {'Narayana' if source=='narayana' else 'Binomial/Pascal'} Triangle")
+        
+        # Rows
+        num_rows = int(input("Number of rows (min:1): ").strip())
+        if num_rows < 1:
+            raise ValueError("Rows must be >= 1")
+        
+        # Region type
+        if source == "binomial":
+            choices = input("Shape: 1:Square 2:Triangle 3:Diamond 4:Staircase 5:Trapezoid 6:Zigzag 7:Cross 8:Nested (1): ").strip() or "1"
+            r_map = {"1":"square","2":"triangle","3":"diamond","4":"staircase","5":"trapezoid","6":"zigzag","7":"cross","8":"nested"}
+            r_type = r_map.get(choices, "square")
+            r_label = {"square":"Square-Kare","triangle":"Triangle-Üçgen","diamond":"Diamond-Elmas",
+                      "staircase":"Staircase-Merdiven","trapezoid":"Trapezoid-Yamuk","zigzag":"Zigzag-Zikzak",
+                      "cross":"Cross-Çapraz","nested":"Nested-İç İçe"}.get(r_type, "Square-Kare")
+            n_shape, n_width = None, None
+        else:
+            choices = input("Shape: 1:Triangle 2:Square 3:Rectangle 4:Diamond 5:Polygon (1): ").strip() or "1"
+            r_map = {"1":"triangle","2":"square","3":"rectangle","4":"diamond","5":"polygon"}
+            r_type = r_map.get(choices, "triangle")
+            r_label = {"triangle":"Triangle-Üçgen","square":"Square-Kare","rectangle":"Rectangle-Dikdörtgen",
+                      "diamond":"Diamond-Elmas","polygon":"Polygon-Çokgen"}.get(r_type, "Triangle-Üçgen")
+            n_shape = r_type
+            n_width = int(input(f"Width for {r_label}: ").strip()) if r_type in ("rectangle","polygon") else None
+        
+        # Size validation
+        max_sz = (num_rows+1)//2 if r_type in ("diamond","cross") else num_rows
+        size = int(input(f"Size (1-{max_sz}): ").strip())
+        if not (1 <= size <= max_sz):
+            raise ValueError(f"Size must be 1-{max_sz}")
+        
+        # Start row
+        height = 2*size-1 if r_type in ("diamond","cross") else size
+        max_start = num_rows - height
+        start = int(input(f"Start row (1-{max_start+1}): ").strip()) - 1
+        if not (0 <= start <= max_start):
+            raise ValueError(f"Start must be 1-{max_start+1}")
+        
+        # Alignment
+        align = "center" if r_type == "diamond" else {"1":"left","2":"right","3":"center"}.get(input("Align 1:L 2:R 3:C (1): ").strip() or "1", "left")
+        
+        # Visual options
+        vis = {"1":"hexagon","2":"square","3":"circle","4":"triangle"}.get(input("Visual 1:Hex 2:Sq 3:Cir 4:Tri (1): ").strip() or "1", "hexagon")
+        fill = input("Fill? 1:Y 2:N (1): ").strip() != "2"
+        show_vals = input("Show numbers? 1:Y 2:N (1): ").strip() != "2"
+        
+        # Save options
+        save_plot = input("Save PNG? 1:Y 2:N (2): ").strip() == "1"
+        save_path = f"kececi_{source}_{r_type}_{size}.png" if save_plot else None
+        
+        export_choice = input("Export: 1:CSV 2:JSON 3:Both 4:None (4): ").strip() or "4"
+        base = f"kececi_{source}_{r_type}_{size}"
+        
+        return {
+            "triangle_source": source, "num_rows": num_rows, "region_size": size,
+            "start_row_0idx": start, "region_type": r_type, "region_label": r_label,
+            "narayana_shape_type": n_shape, "narayana_width": n_width,
+            "shape_type": vis, "alignment": align, "is_filled": fill,
+            "show_numbers": show_vals, "save_plot": save_plot, "save_path": save_path,
+            "export_csv": export_choice in ("1","3"), "export_json": export_choice in ("2","3"),
+            "csv_path": f"{base}.csv" if export_choice in ("1","3") else None,
+            "json_path": f"{base}.json" if export_choice in ("2","3") else None,
+        }
+        
+    except (ValueError, KeyboardInterrupt) as e:
+        print(f"\n❌ {'Cancelled' if isinstance(e, KeyboardInterrupt) else 'Invalid input'}")
         return None
     except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+        print(f"\n❌ Error: {e}")
         return None
 
 
-# ========================================================
-# 6. Ana Program
-# ========================================================
+# =============================================================================
+# 10. MAIN EXECUTION
+# =============================================================================
 if __name__ == "__main__":
-    params = get_user_parameters_for_region()
-
-    if params:
-        print(f"\n--- Generating {params['region_type'].upper()} Plot ---")
-        fig, ax = draw_kececi_binomial_region(
-            num_rows_to_draw=params["num_rows"],
-            region_size=params["region_size"],
-            start_row_index_0based=params["start_row_0idx"],
-            region_type=params["region_type"],
-            shape_to_draw=params["shape_type"],
-            alignment=params["alignment"],
-            is_filled=params["is_filled"],
-            show_values=params["show_numbers"]
-        )
-        if fig:
-            print("Plot generated successfully.")
-        else:
-            print("Plot generation failed.")
-    else:
-        print("Invalid parameters. Exiting.")
+    print(f"\n🔷 Keçeci Visualizer v{__version__} | Python {PYTHON_VERSION} | {TIMESTAMP}\n")
+    
+    params = get_user_parameters()
+    if not params:
+        print("⛔ Exiting.")
+        exit(1)
+    
+    # Generate triangle
+    triangle = generate_narayana_triangle(params["num_rows"]) if params["triangle_source"]=="narayana" else generate_binomial_triangle(params["num_rows"])
+    
+    print(f"\n🔄 Generating {params['region_type'].upper()}...")
+    
+    # Visualize (returns 5 values)
+    result = draw_kececi_region(
+        triangle_data=triangle, num_rows=params["num_rows"], region_size=params["region_size"],
+        start_row_0based=params["start_row_0idx"], region_type=params["region_type"],
+        shape_to_draw=params["shape_type"], alignment=params["alignment"],
+        is_filled=params["is_filled"], show_values=params["show_numbers"],
+        triangle_source=params["triangle_source"], narayana_shape_type=params.get("narayana_shape_type"),
+        narayana_width=params.get("narayana_width"), show_plot=False
+    )
+    
+    if result[0] is None:
+        print("❌ Visualization failed.")
+        exit(1)
+    
+    fig, ax, series_data, indices, total = result
+    
+    # Export if requested
+    if params.get("export_csv") or params.get("export_json"):
+        print("\n📦 Exporting...")
+        stats = calculate_region_statistics(series_data, params["region_label"])
+        patterns = detect_patterns(series_data)
+        
+        if params.get("export_csv") and params.get("csv_path"):
+            export_to_csv(series_data, indices, params["csv_path"])
+        
+        if params.get("export_json") and params.get("json_path"):
+            payload = {
+                "metadata": {"version": __version__, "timestamp": TIMESTAMP, "python": PYTHON_VERSION,
+                           "source": params["triangle_source"], "region": params["region_label"],
+                           "size": params["region_size"], "start_row": params["start_row_0idx"]+1,
+                           "alignment": params["alignment"]},
+                "data": {"values": series_data, "sum": total, "count": len(series_data), "cells": indices},
+                "statistics": stats, "patterns": patterns,
+                "config": {"shape": params["shape_type"], "filled": params["is_filled"], "show_values": params["show_numbers"]}
+            }
+            export_to_json(payload, params["json_path"])
+    
+    # Show plot
+    if fig:
+        if params.get("save_plot") and params.get("save_path"):
+            plt.savefig(params["save_path"], dpi=200, bbox_inches="tight")
+            print(f"✅ Saved: {params['save_path']}")
+        plt.show()
+        print("✅ Done.")
