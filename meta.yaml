@@ -36,9 +36,9 @@ test:
 about:
   home: https://github.com/WhiteSymmetry/kececisquares
   license: AGPL-3.0-or-later
-  summary: 'Keçeci Binomial Squares (Keçeci Binom Kareleri): The Keçeci Binomial Square is a series of binomial coefficients forming a square region within Khayyam (مثلث خیام), Pascal, Binomial Triangle, selected from a specified starting row with defined size and alignment.'
+  summary: 'Keçeci Binomial Squares (Keçeci Binom Kareleri), Keçeci-Narayana Shapes: The Keçeci Binomial Square is a series of binomial coefficients forming a square region within Khayyam (مثلث خیام), Pascal, Binomial Triangle, selected from a specified starting row with defined size and alignment.'
   description: |
-    Keçeci Binomial Squares (Keçeci Binom Kareleri): The Keçeci Binomial Square is a series of binomial coefficients forming a square region within Khayyam (مثلث خیام), Pascal, Binomial Triangle, selected from a specified starting row with defined size and alignment.
+    Keçeci Binomial Squares (Keçeci Binom Kareleri), Keçeci-Narayana Shapes: The Keçeci Binomial Square is a series of binomial coefficients forming a square region within Khayyam (مثلث خیام), Pascal, Binomial Triangle, selected from a specified starting row with defined size and alignment.
   dev_url: https://github.com/WhiteSymmetry/kececisquares
   doc_url: https://github.com/WhiteSymmetry/kececisquares
   doc_source_url: https://github.com/WhiteSymmetry/kececisquares/blob/main/README.md
