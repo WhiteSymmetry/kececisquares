@@ -115,158 +115,203 @@ https://zenodo.org/records/
 ### Example
 
 ```python
+import kececisquares as ks
+
+# Manuel parametre dict'i oluştur
+test_params = {
+    "triangle_source": "binomial",
+    "num_rows": 12,
+    "region_size": 4,
+    "start_row_0idx": 5,
+    "region_type": "square",
+    "shape_type": "hexagon",
+    "alignment": "center",
+    "is_filled": True,
+    "show_numbers": True,
+    "save_plot": False,
+    "save_path": None,
+    "export_csv": False,
+    "export_json": False,
+    "csv_path": None,
+    "json_path": None,
+    "narayana_shape_type": None,
+    "narayana_width": None,
+    "region_label": "Square-Kare"
+}
+
+# Tek satırda çalıştır
+ks.generate_full_report(test_params)
+```
+
+```python
 import matplotlib.pyplot as plt
 import kececisquares as ks
-import math
+from kececisquares import get_user_parameters, generate_full_report
 
-def get_user_parameters():
-    """Kullanıcıdan parametreleri alır."""
-    print("--- Configure Binomial Triangle Visualization ---")
-    try:
-        # Bölge türü seçimi
-        region_prompt = (
-            "Region type (1: Square, 2: Triangle, 3: Diamond, 4: Staircase, "
-            "5: Trapezoid, 6: Zigzag, 7: Cross; default: 1-Square): "
-        )
-        region_choice = input(region_prompt).strip()
-        region_map = {
-            "1": ("square", "Square-Kare-Eşkenar Dikdörtgen"),
-            "2": ("triangle", "Triangle-Üçgen"),
-            "3": ("diamond", "Diamond-Elmas"),
-            "4": ("staircase", "Staircase-Merdiven"),
-            "5": ("trapezoid", "Isosceles Trapezoid-İkizkenar Trapezoid"),
-            "6": ("zigzag", "Zigzag-Zikzak"),
-            "7": ("cross", "Cross-Çapraz")
-        }
-        region_type, region_label = "square", "Square-Kare-Eşkenar Dikdörtgen"
-        if region_choice == "":
-            print("Defaulting to 'Square' (1).")
-        elif region_choice in region_map:
-            region_type, region_label = region_map[region_choice]
-            print(f"Selected region type: {region_label}")
-        else:
-            print("Invalid choice. Defaulting to 'Square' (1).")
-
-        # Satır sayısı
-        num_rows = int(input("Enter number of rows for Pascal's Triangle (e.g., 8, min: 1): "))
-        if num_rows < 1:
-            print("Error: Number of rows must be at least 1.")
-            return None
-
-        # Bölge boyutu
-        if region_type in ["diamond", "cross"]:
-            max_size = (num_rows + 1) // 2
-            size_prompt = f"Enter {region_label} size (1-{max_size}, e.g., 3): "
-        else:
-            max_size = num_rows
-            size_prompt = f"Enter {region_label} size (1-{num_rows}, e.g., 3): "
-        region_size = int(input(size_prompt))
-        if not (1 <= region_size <= max_size):
-            print(f"Error: {region_label} size must be between 1 and {max_size}.")
-            return None
-
-        # Başlangıç satırı
-        if region_type in ["diamond", "cross"]:
-            total_height = 2 * region_size - 1
-            max_start_row_0idx = num_rows - total_height
-        else:
-            max_start_row_0idx = num_rows - region_size
-        min_start_row_0idx = 0
-        if min_start_row_0idx > max_start_row_0idx:
-            print(f"A {region_label} of size {region_size} cannot fit in {num_rows} rows.")
-            return None
-        start_row_prompt = f"Enter starting row (1-indexed, between {min_start_row_0idx+1} and {max_start_row_0idx+1}): "
-        start_row_user = int(input(start_row_prompt))
-        start_row_0idx = start_row_user - 1
-        if not (min_start_row_0idx <= start_row_0idx <= max_start_row_0idx):
-            print(f"Error: Starting row must be between {min_start_row_0idx+1} and {max_start_row_0idx+1}.")
-            return None
-
-        # Hizalama
-        if region_type == "diamond":
-            alignment = "center"
-            print("♦ Diamond only supports CENTER alignment. Automatically set.")
-        else:
-            align_prompt = "Alignment (1: Left, 2: Right, 3: Centered; default: 1-Left): "
-            align_choice = input(align_prompt).strip()
-            align_map = {"1": "left", "2": "right", "3": "center"}
-            alignment = "left"
-            if align_choice == "":
-                print("Defaulting to 'Left-Aligned' (1).")
-            elif align_choice in align_map:
-                alignment = align_map[align_choice]
-            else:
-                print("Invalid alignment. Defaulting to 'Left-Aligned' (1).")
-
-        # Şekil türü
-        shape_prompt = "Shape type (1: hexagon, 2: square, 3: circle, 4: triangle; default: 1-hexagon): "
-        shape_choice = input(shape_prompt).strip()
-        shape_map = {"1": "hexagon", "2": "square", "3": "circle", "4": "triangle"}
-        shape_type = "hexagon"
-        if shape_choice == "":
-            print("Defaulting to 'hexagon' (1).")
-        elif shape_choice in shape_map:
-            shape_type = shape_map[shape_choice]
-        else:
-            print("Invalid shape type. Defaulting to 'hexagon' (1).")
-
-        # Dolgu
-        fill_prompt = "Fill the region? (1: Yes, 2: No; default: 1-Yes): "
-        fill_choice = input(fill_prompt).strip()
-        is_filled = True
-        if fill_choice == "2":
-            is_filled = False
-        elif fill_choice not in ["1", ""]:
-            print("Invalid choice. Defaulting to 'Yes' (1).")
-
-        # Sayıları göster
-        show_val_prompt = "Show numbers inside shapes? (1: Yes, 2: No; default: 1-Yes): "
-        show_val_choice = input(show_val_prompt).strip()
-        show_numbers = True
-        if show_val_choice == "2":
-            show_numbers = False
-        elif show_val_choice not in ["1", ""]:
-            print("Invalid choice. Defaulting to show numbers (1).")
-
-        return {
-            "num_rows": num_rows,
-            "region_size": region_size,
-            "start_row_0idx": start_row_0idx,
-            "region_type": region_type,
-            "shape_type": shape_type,
-            "alignment": alignment,
-            "is_filled": is_filled,
-            "show_numbers": show_numbers,
-        }
-    except ValueError:
-        print("Error: Invalid numerical input.")
-        return None
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
-        return None
-
-# Kullanıcıdan parametreleri al ve görselleştirmeyi çalıştır
+# 1. Kullanıcıdan parametreleri al
 params = get_user_parameters()
+
+# 2. Parametre geçerliyse görselleştirmeyi başlat
 if params:
-    print(f"\n--- Generating {params['region_type'].upper()} Plot ---")
-    fig, ax = ks.draw_kececi_binomial_region(
-        num_rows_to_draw=params["num_rows"],
-        region_size=params["region_size"],
-        start_row_index_0based=params["start_row_0idx"],
-        region_type=params["region_type"],
-        shape_to_draw=params["shape_type"],
-        alignment=params["alignment"],
-        is_filled=params["is_filled"],
-        show_plot=True,
-        show_values=params["show_numbers"]
-    )
-    if fig:
-        print("Plot generated successfully.")
-    else:
-        print("Plot generation failed.")
-else:
-    print("Invalid parameters. Exiting.")
+    try:
+        print("\n⏳ Keçeci Visualizer çalışıyor...")
+        report = ks.generate_full_report(params)
+        
+        # 3. Sonuçları özetle
+        print("\n" + "="*50)
+        print("📦 OLUŞTURULAN ÇIKTILAR")
+        print("="*50)
+        print(f"  🔹 Seçilen Eleman: {report['statistics']['count']}")
+        print(f"  🔹 Toplam Değer  : {report['statistics']['sum']:,}")
+        
+        for key in ("plot", "csv", "json"):
+            if report.get(key):
+                print(f"  ✅ {key.upper():<5}: {report[key]}")
+                
+        print("="*50)
+        print("🎉 İşlem başarıyla tamamlandı.")
+        
+    except Exception as e:
+        print(f"\n❌ Hata oluştu: {e}")
 ```
+
+```python
+import matplotlib.pyplot as plt
+import kececisquares as ks
+from kececisquares import (
+    get_user_parameters, 
+    generate_binomial_triangle, 
+    generate_narayana_triangle, 
+    draw_kececi_region, 
+    export_to_csv, 
+    export_to_json, 
+    calculate_region_statistics
+)
+
+# 1. Parametre al
+params = get_user_parameters()
+if not params:
+    exit("❌ Parametre alınamadı.")
+
+# 2. Üçgeni oluştur
+if params["triangle_source"] == "narayana":
+    triangle = generate_narayana_triangle(params["num_rows"])
+else:
+    triangle = generate_binomial_triangle(params["num_rows"])
+
+# 3. Görselleştir (5 değer döner: fig, ax, series_data, indices, total_value)
+result = ks.draw_kececi_region(
+    triangle_data=triangle,
+    num_rows=params["num_rows"],
+    region_size=params["region_size"],
+    start_row_0based=params["start_row_0idx"],
+    region_type=params["region_type"],
+    shape_to_draw=params["shape_type"],
+    alignment=params["alignment"],
+    is_filled=params["is_filled"],
+    show_values=params["show_numbers"],
+    triangle_source=params["triangle_source"],
+    narayana_shape_type=params.get("narayana_shape_type"),
+    narayana_width=params.get("narayana_width"),
+    show_plot=False  # Manuel kontrol için False
+)
+
+if result[0] is None:
+    exit("❌ Görselleştirme başarısız.")
+
+fig, ax, series_data, indices, total = result
+
+# 4. İstatistikleri hesapla
+stats = calculate_region_statistics(series_data, params["region_label"])
+print(f"\n📊 Toplam: {total:,} | Eleman: {len(series_data)} | Ortalama: {stats['mean']:.2f}")
+
+# 5. Dışa Aktar (İsteğe bağlı)
+if params.get("csv_path"):
+    ks.export_to_csv(series_data, indices, params["csv_path"])
+if params.get("json_path"):
+    payload = {"series": series_data, "stats": stats, "config": params}
+    ks.export_to_json(payload, params["json_path"])
+
+# 6. Plot'u kaydet ve göster
+if params.get("save_path"):
+    fig.savefig(params["save_path"], dpi=200, bbox_inches="tight")
+    print(f"✅ PNG kaydedildi: {params['save_path']}")
+
+plt.show()
+```
+
+```python
+#!/usr/bin/env python3
+"""Quick test for the fixes."""
+
+from kececisquares import (
+    generate_binomial_triangle,
+    kececi_binomial_square,
+    draw_shape_on_axis,
+    draw_kececi_region
+)
+import matplotlib.pyplot as plt
+
+print("🔧 Testing fixes...")
+
+# Test 1: Function signature
+tri = generate_binomial_triangle(10)
+try:
+    series, total, indices = kececi_binomial_square(tri, 4, 5, "center")
+    print(f"✅ kececi_binomial_square: OK ({len(series)} values, total={total})")
+except TypeError as e:
+    print(f"❌ kececi_binomial_square: {e}")
+
+# Test 2: draw_shape_on_axis with RegularPolygon
+try:
+    fig, ax = plt.subplots()
+    draw_shape_on_axis(ax, 0, 0, "hexagon", 0.5, "gold", "black")
+    plt.close(fig)
+    print("✅ draw_shape_on_axis: OK")
+except TypeError as e:
+    print(f"❌ draw_shape_on_axis: {e}")
+
+# Test 3: Full visualization
+try:
+    result = draw_kececi_region(
+        triangle_data=tri, num_rows=10, region_size=4, start_row_0based=5,
+        region_type="square", show_plot=False
+    )
+    if result[0] is not None:
+        print("✅ draw_kececi_region: OK")
+        plt.close(result[0])
+    else:
+        print("❌ draw_kececi_region: returned None")
+except Exception as e:
+    print(f"❌ draw_kececi_region: {e}")
+
+print("\n🎉 All tests completed!")
+```
+
+```python
+from kececisquares import generate_full_report, print_triangle_matrix
+
+# Örnek 1: Tek fonksiyonla tam rapor
+params = {
+    "triangle_source": "binomial",
+    "num_rows": 15,
+    "region_size": 4,
+    "start_row_0idx": 5,
+    "region_type": "square",
+    "alignment": "center",
+    "save_path": "output.png",
+    "csv_path": "output.csv", 
+    "json_path": "output.json",
+}
+result = generate_full_report(params)
+print(f"📁 Generated: { {k:v for k,v in result.items() if v} }")
+
+# Örnek 2: Sadece matris yazdırma
+from kececisquares import generate_binomial_triangle, print_triangle_matrix
+tri = generate_binomial_triangle(10)
+print_triangle_matrix(tri, title="Pascal Triangle (10 rows)")
+```
+
 ---
 
 
