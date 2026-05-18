@@ -4,10 +4,6 @@ on:
   release:
     types: [published]
 
-runs:
-  using: 'node24'
-  main: 'main.js'
-
 jobs:
   publish-to-zenodo:
     runs-on: ubuntu-latest
