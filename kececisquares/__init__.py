@@ -13,7 +13,7 @@ Provides a unified toolkit for:
 """
 from __future__ import annotations
 
-__version__ = "0.1.8"
+__version__ = "0.1.9"
 
 
 from .kececisquares import (
