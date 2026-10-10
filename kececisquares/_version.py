@@ -1,6 +1,6 @@
 # _version.py
 
-__version__ = "0.1.8"
+__version__ = "0.1.9"
 __license__ = "AGPL3.0-or-later"
 __description__ = "Keçeci Binomial Squares (Keçeci Binom Kareleri) & Keçeci-Harayana Shapes: The Keçeci Binomial Square is a series of binomial coefficients forming a square region within Khayyam (مثلث خیام), Pascal, Binomial Triangle, selected from a specified starting row with defined size and alignment."
 __author__ = "Mehmet Keçeci"
